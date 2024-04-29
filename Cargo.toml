@@ -1,0 +1,13 @@
+[package]
+name = "wikidata-phonemes"
+version = "0.1.0"
+edition = "2021"
+authors = ["Artur Corrêa Souza"]
+license = "MIT"
+description = "Wikidata phoneme web editor suitable for mobile phones."
+repository = "https://github.com/arcstur/wikidata-phonemes"
+readme = "README.md"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
