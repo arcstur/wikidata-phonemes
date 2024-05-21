@@ -1,5 +1,6 @@
 mod app;
 mod auth;
+mod client;
 mod error;
 
 use tracing::info;

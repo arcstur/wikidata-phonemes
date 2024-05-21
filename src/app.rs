@@ -1,8 +1,22 @@
+use self::super::client::Client;
 use axum::Router;
 use tower_http::{services::ServeDir, trace::TraceLayer};
 type Request = axum::http::Request<axum::body::Body>;
 
-pub type AppRouter = Router<()>;
+pub type AppRouter = Router<AppState>;
+
+#[derive(Clone)]
+pub struct AppState {
+    client: Client,
+}
+
+impl AppState {
+    fn new() -> Self {
+        Self {
+            client: Client::new(),
+        }
+    }
+}
 
 #[derive(Clone)]
 pub struct App {}
@@ -21,9 +35,12 @@ impl App {
 
         let auth_layer = super::auth::layer().await;
 
+        let state = AppState::new();
+
         Router::new()
             // .route("/", get(index))
             .nest("/auth", super::auth::router())
+            .with_state(state)
             .nest_service("/static", ServeDir::new("static"))
             .layer(auth_layer)
             .layer(trace_layer)
