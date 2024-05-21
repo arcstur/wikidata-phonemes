@@ -1,0 +1,9 @@
+SELECT ?phoneme ?phonemeLabel (group_concat(?ipa; separator=" ") AS ?transcriptions)
+WHERE
+{
+  ?phoneme wdt:P279* wd:Q202064. # subclass of phone
+  ?phoneme wdt:P898 ?ipa.
+  SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+GROUP BY ?phoneme ?phonemeLabel
+ORDER BY ?phonemeLabel

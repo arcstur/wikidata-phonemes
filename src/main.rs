@@ -3,6 +3,7 @@ mod auth;
 mod client;
 mod error;
 mod languages;
+mod phonemes;
 
 use tracing::info;
 

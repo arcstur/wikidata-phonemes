@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<table>
+  <thead>
+    <th> Phoneme </th>
+    <th> IPA </th>
+  </thead>
+  {% for phoneme in phonemes %}
+  <tr>
+    <td> <a href="{{ phoneme.uri }}">{{ phoneme.label }}</a> </td>
+    <td> {{ phoneme.transcriptions }} </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}
+
