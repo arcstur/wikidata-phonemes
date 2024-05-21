@@ -1,0 +1,8 @@
+SELECT ?language ?languageLabel (COUNT(?phoneme) AS ?phoneme_count)
+WHERE {
+    ?language wdt:P31 wd:Q34770 .
+    ?language wdt:P2587 ?phoneme.
+    SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
+}
+GROUP BY ?language ?languageLabel
+ORDER BY DESC(?phoneme_count)

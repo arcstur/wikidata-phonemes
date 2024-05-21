@@ -2,11 +2,13 @@ mod app;
 mod auth;
 mod client;
 mod error;
+mod languages;
 
 use tracing::info;
 
 use app::App;
 pub use app::AppRouter;
+pub use client::{Client, WikiValue};
 pub use error::{Error, Result};
 
 #[tokio::main]

@@ -1,11 +1,11 @@
 use self::super::client::Client;
-use axum::Router;
+use axum::{extract::FromRef, Router};
 use tower_http::{services::ServeDir, trace::TraceLayer};
 type Request = axum::http::Request<axum::body::Body>;
 
 pub type AppRouter = Router<AppState>;
 
-#[derive(Clone)]
+#[derive(Clone, FromRef)]
 pub struct AppState {
     client: Client,
 }
@@ -40,6 +40,7 @@ impl App {
         Router::new()
             // .route("/", get(index))
             .nest("/auth", super::auth::router())
+            .nest("/languages", super::languages::router())
             .with_state(state)
             .nest_service("/static", ServeDir::new("static"))
             .layer(auth_layer)

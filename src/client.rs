@@ -1,5 +1,20 @@
+use std::fmt::Display;
+
 use serde::{de::DeserializeOwned, Deserialize};
 use tracing::{debug, instrument};
+
+#[derive(Debug, Deserialize)]
+pub struct WikiValue<T> {
+    #[serde(rename = "type")]
+    pub kind: String,
+    pub value: T,
+}
+
+impl<T: Display> Display for WikiValue<T> {
+    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
+        write!(f, "{}", self.value)
+    }
+}
 
 /// HTTP client to communicate with the Wikidata API.
 #[derive(Clone)]

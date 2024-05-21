@@ -1,0 +1,18 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<table>
+  <thead>
+    <th> Language </th>
+    <th> Phoneme count </th>
+  </thead>
+  {% for language in languages %}
+  <tr>
+    <td> <a href="{{ language.uri }}">{{ language.label }}</a> </td>
+    <td> {{ language.phoneme_count }} </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}
+
