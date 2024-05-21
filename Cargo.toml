@@ -11,3 +11,32 @@ readme = "README.md"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
+# log/tracing
+tracing = "0.1.40"
+tracing-subscriber = { version = "0.3.18", features = ["env-filter"] }
+
+# error handling
+thiserror = "1"
+
+# cache/db/data
+moka = { version = "0.12.7", features = ["future"] }
+serde = { version = "1", features = ["derive"] }
+uuid = { version = "1.8.0", features = ["v7", "fast-rng", "v4", "serde"] }
+
+# async runtime
+tokio = { version = "1", features = ["full"] }
+
+# web
+axum = { version = "0.7", features = ["form", "macros"] }
+axum-htmx = "0.5.0"
+tower-http = { version = "0.5.2", features = ["fs", "trace"] }
+
+# templates
+askama = { version = "0.12.1", features = ["with-axum"] }
+askama_axum = "0.4.0"
+
+# auth/sessions
+axum-login = "0.15.1"
+time = "0.3.36"
+tower-sessions = "0.12.2"
+tower-sessions-moka-store = "0.13.0"
