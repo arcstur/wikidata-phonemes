@@ -30,6 +30,7 @@ tokio = { version = "1", features = ["full"] }
 axum = { version = "0.7", features = ["form", "macros"] }
 axum-htmx = "0.5.0"
 tower-http = { version = "0.5.2", features = ["fs", "trace"] }
+reqwest = { version = "0.12.4", default-features = false, features = ["rustls-tls", "json"] }
 
 # templates
 askama = { version = "0.12.1", features = ["with-axum"] }
