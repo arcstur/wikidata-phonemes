@@ -13,7 +13,7 @@ pub use app::AppRouter;
 pub use client::Client;
 pub use error::{Error, Result};
 pub use phonemes::Phoneme;
-pub use wikidata::{Uri, WikiValue, WikidataQ};
+pub use wikidata::{WikiValue, WikidataQ};
 
 #[tokio::main]
 async fn main() {

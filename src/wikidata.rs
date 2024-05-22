@@ -1,8 +1,9 @@
 use std::fmt::Display;
 
-use serde::Deserialize;
+use serde::{de::Error, Deserialize, Deserializer};
 
-pub struct WikidataQ(pub u32);
+#[derive(Debug, Deserialize)]
+pub struct WikidataQ(#[serde(deserialize_with = "from_q_uri")] pub u32);
 
 impl WikidataQ {
     pub fn as_str(&self) -> String {
@@ -10,30 +11,24 @@ impl WikidataQ {
     }
 }
 
-#[derive(Debug, Deserialize)]
-pub struct Uri {
-    #[serde(rename = "type")]
-    kind: String,
-    value: String,
-}
-
-impl Display for Uri {
+impl Display for WikidataQ {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "{}", self.value)
+        write!(f, "http://www.wikidata.org/entity/Q{}", self.0)
     }
 }
 
-impl TryFrom<Uri> for WikidataQ {
-    type Error = Box<dyn std::error::Error>;
+fn from_q_uri<'de, D>(deserializer: D) -> Result<u32, D::Error>
+where
+    D: Deserializer<'de>,
+{
+    let uri: WikiValue<String> = Deserialize::deserialize(deserializer)?;
+    let s = uri.value;
 
-    fn try_from(uri: Uri) -> Result<Self, Self::Error> {
-        let value = uri.value;
-        let (_, id) = value
-            .rsplit_once("/entity/Q")
-            .ok_or("No /entity/Q found in URI.")?;
-        let id = id.parse::<u32>()?;
-        Ok(WikidataQ(id))
-    }
+    let (_, id) = s
+        .rsplit_once("/entity/Q")
+        .ok_or(D::Error::custom(format!("no /entity/Q in URI: {}", s)))?;
+
+    id.parse::<u32>().map_err(D::Error::custom)
 }
 
 #[derive(Debug, Deserialize)]

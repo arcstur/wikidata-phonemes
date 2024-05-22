@@ -9,8 +9,11 @@
   </thead>
   {% for language in languages %}
   <tr>
-    <td> <a href="{{ language.uri }}">{{ language.label }}</a> </td>
+    <td> <a href="{{ language.q }}">{{ language.label }}</a> </td>
     <td> {{ language.phoneme_count }} </td>
+    <td>
+        <a href="/languages/{{ language.q.0 }}"> See </a>
+    </td>
   </tr>
   {% endfor %}
 </table>

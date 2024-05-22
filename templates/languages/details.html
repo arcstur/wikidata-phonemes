@@ -3,7 +3,7 @@
 
 <h1> Language X </h1>
 
-<h2> Phonemes </h2>
+<h2> Phonemes ({{ phonemes.len() }})</h2>
 
 <table>
   <thead>
@@ -13,7 +13,7 @@
   </thead>
   {% for phoneme in phonemes %}
   <tr>
-    <td> <a href="{{ phoneme.uri }}">{{ phoneme.label }}</a> </td>
+    <td> <a href="{{ phoneme.q }}">{{ phoneme.label }}</a> </td>
     <td> {{ phoneme.transcriptions }} </td>
     <td>
     {% match phoneme.audio %}
