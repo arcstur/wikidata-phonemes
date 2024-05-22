@@ -3,6 +3,14 @@ use std::fmt::Display;
 use serde::{de::DeserializeOwned, Deserialize};
 use tracing::{debug, instrument};
 
+pub struct WikidataQ(pub u32);
+
+impl WikidataQ {
+    pub fn as_str(&self) -> String {
+        format!("Q{}", self.0)
+    }
+}
+
 #[derive(Debug, Deserialize)]
 pub struct WikiValue<T> {
     #[serde(rename = "type")]

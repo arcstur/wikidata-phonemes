@@ -1,0 +1,35 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h1> Language X </h1>
+
+<h2> Phonemes </h2>
+
+<table>
+  <thead>
+    <th> Name </th>
+    <th> IPA </th>
+    <th> Audio </th>
+  </thead>
+  {% for phoneme in phonemes %}
+  <tr>
+    <td> <a href="{{ phoneme.uri }}">{{ phoneme.label }}</a> </td>
+    <td> {{ phoneme.transcriptions }} </td>
+    <td>
+    {% match phoneme.audio %}
+      {% when Some(s) %}
+        <audio controls style="display: none" id="audio-{{ loop.index }}">
+          <source src="{{ s }}">
+        </audio>
+        <button onclick="document.getElementById('audio-{{ loop.index }}').play()">
+          Listen
+        </button>
+      {% when None %}
+    {% endmatch %}
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}
+

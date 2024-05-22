@@ -2,7 +2,7 @@ mod templates;
 
 use axum::{extract::State, routing::get};
 
-use crate::{AppRouter, Client, Result, WikiValue};
+use crate::{client::WikidataQ, AppRouter, Client, Result, WikiValue};
 use serde::Deserialize;
 use templates::List;
 
@@ -11,20 +11,26 @@ pub fn router() -> AppRouter {
 }
 
 #[derive(Debug, Deserialize)]
-struct Phoneme {
+pub struct Phoneme {
     #[serde(rename = "phoneme")]
-    uri: WikiValue<String>,
+    pub uri: WikiValue<String>,
     #[serde(rename = "phonemeLabel")]
-    label: WikiValue<String>,
-    transcriptions: WikiValue<String>,
-    audio: Option<WikiValue<String>>,
+    pub label: WikiValue<String>,
+    pub transcriptions: WikiValue<String>,
+    pub audio: Option<WikiValue<String>>,
 }
 
 impl Phoneme {
     const LIST: &'static str = include_str!("list.sparql");
+    const BY_LANGUAGE: &'static str = include_str!("by_language.sparql");
 
     async fn list(client: &Client) -> Result<Vec<Self>> {
         let query = Self::LIST;
+        Ok(client.query::<Self>(query).await?)
+    }
+
+    pub async fn by_language(client: &Client, language: WikidataQ) -> Result<Vec<Self>> {
+        let query = &Self::BY_LANGUAGE.replace("$1", &language.as_str());
         Ok(client.query::<Self>(query).await?)
     }
 }
@@ -42,5 +48,14 @@ mod tests {
     async fn list_phonemes() {
         let client = Client::new();
         Phoneme::list(&client).await.unwrap();
+    }
+
+    #[tokio::test]
+    async fn list_phonemes_english() {
+        let client = Client::new();
+        let english_phonemes = Phoneme::by_language(&client, WikidataQ(1860))
+            .await
+            .unwrap();
+        assert!(english_phonemes.len() > 1);
     }
 }

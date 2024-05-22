@@ -9,8 +9,9 @@ use tracing::info;
 
 use app::App;
 pub use app::AppRouter;
-pub use client::{Client, WikiValue};
+pub use client::{Client, WikiValue, WikidataQ};
 pub use error::{Error, Result};
+pub use phonemes::Phoneme;
 
 #[tokio::main]
 async fn main() {
