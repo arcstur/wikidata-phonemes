@@ -2,7 +2,7 @@ mod templates;
 
 use axum::{extract::State, routing::get};
 
-use crate::{client::WikidataQ, AppRouter, Client, Result, WikiValue};
+use crate::{AppRouter, Client, Result, Uri, WikiValue, WikidataQ};
 use serde::Deserialize;
 use templates::List;
 
@@ -13,7 +13,7 @@ pub fn router() -> AppRouter {
 #[derive(Debug, Deserialize)]
 pub struct Phoneme {
     #[serde(rename = "phoneme")]
-    pub uri: WikiValue<String>,
+    pub uri: Uri,
     #[serde(rename = "phonemeLabel")]
     pub label: WikiValue<String>,
     pub transcriptions: WikiValue<String>,

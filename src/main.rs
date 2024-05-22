@@ -4,14 +4,16 @@ mod client;
 mod error;
 mod languages;
 mod phonemes;
+mod wikidata;
 
 use tracing::info;
 
 use app::App;
 pub use app::AppRouter;
-pub use client::{Client, WikiValue, WikidataQ};
+pub use client::Client;
 pub use error::{Error, Result};
 pub use phonemes::Phoneme;
+pub use wikidata::{Uri, WikiValue, WikidataQ};
 
 #[tokio::main]
 async fn main() {

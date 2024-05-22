@@ -3,7 +3,7 @@ WHERE
 {
   ?phoneme wdt:P279* wd:Q202064.
   ?phoneme wdt:P898 ?ipa.
-  $1 wdt:P2587 ?phoneme.
+  wd:$1 wdt:P2587 ?phoneme.
   OPTIONAL { ?phoneme wdt:P51 ?audio. }
   SERVICE wikibase:label { bd:serviceParam wikibase:language "en". }
 }
