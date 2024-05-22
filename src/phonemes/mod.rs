@@ -17,6 +17,7 @@ struct Phoneme {
     #[serde(rename = "phonemeLabel")]
     label: WikiValue<String>,
     transcriptions: WikiValue<String>,
+    audio: Option<WikiValue<String>>,
 }
 
 impl Phoneme {
