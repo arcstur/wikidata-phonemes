@@ -1,6 +1,7 @@
 mod backend;
 mod sessions;
 mod templates;
+mod user;
 
 use axum::{
     http::StatusCode,
@@ -16,7 +17,7 @@ use backend::Credentials;
 use sessions::Sessions;
 use templates::{Login, LoginDev, Profile};
 
-pub use backend::{Backend, User};
+pub use self::{backend::Backend, user::User};
 pub type AuthSession = axum_login::AuthSession<Backend>;
 
 pub async fn layer() -> AuthManagerLayer<Backend, Sessions> {
@@ -28,14 +29,18 @@ pub async fn layer() -> AuthManagerLayer<Backend, Sessions> {
 
 pub fn router() -> AppRouter {
     AppRouter::new()
-        .route("/login", get(|| async { Login {} }).post(login))
+        .route("/login", get(login_get))
         .route("/login/dev", get(|| async { LoginDev {} }).post(login_dev))
         .route("/logout", get(logout))
         .route("/profile", get(profile))
 }
 
-async fn login() -> impl IntoResponse {
-    Redirect::to("/")
+async fn login_get(session: AuthSession) -> Response {
+    if session.user.is_some() {
+        Redirect::to("/auth/profile").into_response()
+    } else {
+        Login {}.into_response()
+    }
 }
 
 #[derive(Deserialize)]
@@ -60,10 +65,6 @@ async fn logout(mut session: AuthSession) -> impl IntoResponse {
     Redirect::to("/")
 }
 
-async fn profile(session: AuthSession) -> Response {
-    if let Some(user) = &session.user {
-        Profile { user }.into_response()
-    } else {
-        Redirect::to("/auth/login").into_response()
-    }
+async fn profile(user: User) -> Response {
+    Profile { user: &user }.into_response()
 }

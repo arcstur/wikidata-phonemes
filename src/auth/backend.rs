@@ -1,46 +1,12 @@
 use axum::async_trait;
-use axum_login::{AuthUser, AuthnBackend, UserId};
+use axum_login::{AuthnBackend, UserId};
 use moka::future::Cache;
 use serde::Deserialize;
 use tracing::{instrument, Level};
 use uuid::Uuid;
 
+use super::user::User;
 use crate::{Client, Result};
-
-#[derive(Clone)]
-pub struct User {
-    id: Uuid,
-    username: String,
-    token: String,
-}
-
-impl AuthUser for User {
-    type Id = Uuid;
-
-    fn id(&self) -> Self::Id {
-        self.id
-    }
-
-    fn session_auth_hash(&self) -> &[u8] {
-        self.token.as_bytes()
-    }
-}
-
-impl User {
-    pub fn username(&self) -> &str {
-        &self.username
-    }
-}
-
-impl std::fmt::Debug for User {
-    fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        f.debug_struct("User")
-            .field("id", &self.id)
-            .field("username", &self.username)
-            .field("token", &"[redacted]")
-            .finish()
-    }
-}
 
 #[derive(Clone)]
 pub struct Backend {
@@ -78,11 +44,7 @@ impl AuthnBackend for Backend {
         let user = match creds {
             Self::Credentials::Developer { token } => {
                 let username = client.username(&token).await?;
-                User {
-                    id,
-                    username,
-                    token,
-                }
+                User::new(id, username, token)
             }
         };
         self.cache.insert(id, user.clone()).await;
