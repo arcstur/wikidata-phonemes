@@ -7,10 +7,18 @@ pub struct Client {
     inner: reqwest::Client,
 }
 
+impl Default for Client {
+    fn default() -> Self {
+        Self::new()
+    }
+}
+
 impl Client {
     const USER_AGENT: &'static str =
         concat!(env!("CARGO_PKG_NAME"), "/", env!("CARGO_PKG_VERSION"),);
     const ENDPOINT: &'static str = "https://query.wikidata.org/sparql";
+    const MEDIAWIKI: &'static str = "https://www.mediawiki.org/w/rest.php/";
+    const ENDPOINT_PROFILE: &'static str = "oauth2/resource/profile";
 
     /// Constructs a new client with a default User-Agent.
     pub fn new() -> Self {
@@ -41,6 +49,26 @@ impl Client {
 
         Ok(response.results.bindings)
     }
+
+    #[instrument(level = "debug", skip(self, token), err)]
+    pub async fn username(&self, token: &str) -> reqwest::Result<String> {
+        let response = self
+            .inner
+            .get(format!("{}{}", Self::MEDIAWIKI, Self::ENDPOINT_PROFILE))
+            .header("Authorization", format!("Bearer {}", token))
+            .header("Content-Type", "application/json")
+            .send()
+            .await?
+            .json::<UsernameResponse>()
+            .await?;
+
+        Ok(response.username)
+    }
+}
+
+#[derive(Debug, Deserialize)]
+struct UsernameResponse {
+    username: String,
 }
 
 /// Response returned by the Wikidata API. Contains the results in `results`.

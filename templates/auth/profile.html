@@ -1,7 +1,9 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<form action="/auth/logout" method="post">
+<h1> {{ user.username() }} </h1>
+
+<form action="/auth/logout" method="get">
   <button>Log out</button>
 </form>
 

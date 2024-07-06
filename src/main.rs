@@ -10,6 +10,7 @@ use tracing::info;
 
 use app::App;
 pub use app::AppRouter;
+pub use auth::User;
 pub use client::Client;
 pub use error::{Error, Result};
 pub use phonemes::Phoneme;

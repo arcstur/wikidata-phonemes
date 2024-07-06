@@ -1,0 +1,13 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<form action="/auth/login/dev" method="post">
+  <fieldset>
+  <label for="token">Access token</label>
+  <input type="password" name="token" placeholder="Access token">
+  </fieldset>
+  <input type="submit" value="Sign in">
+</form>
+
+{% endblock content %}
+
