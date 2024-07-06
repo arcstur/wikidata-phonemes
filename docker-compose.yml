@@ -1,0 +1,7 @@
+services:
+  rust:
+    build: .
+    ports:
+      - 3000:3000
+    environment:
+      - RUST_LOG=${RUST_LOG:-info,tower_http=debug,wikidata_phonemes=debug,axum_login=warn,tower_sessions=warn}
