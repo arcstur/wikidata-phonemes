@@ -43,7 +43,9 @@ impl AuthnBackend for Backend {
         let client = Client::new();
         let user = match creds {
             Self::Credentials::Developer { token } => {
-                let username = client.username(&token).await?;
+                let Some(username) = client.username(&token).await? else {
+                    return Ok(None);
+                };
                 User::new(id, username, token)
             }
         };
@@ -55,5 +57,14 @@ impl AuthnBackend for Backend {
     #[instrument(skip(self), fields(cache_hit), ret, err, level = Level::DEBUG)]
     async fn get_user(&self, id: &UserId<Self>) -> Result<Option<Self::User>> {
         Ok(self.cache.get(id).await)
+    }
+}
+
+impl From<axum_login::Error<Backend>> for crate::Error {
+    fn from(value: axum_login::Error<Backend>) -> Self {
+        match value {
+            axum_login::Error::Session(e) => Self::Session(e),
+            axum_login::Error::Backend(e) => e,
+        }
     }
 }

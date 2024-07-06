@@ -50,9 +50,11 @@ impl Client {
         Ok(response.results.bindings)
     }
 
+    /// Tries to obtain an username from the provided access token.
+    /// Returns `None` when unauthorized.
     #[instrument(level = "debug", skip(self, token), err)]
-    pub async fn username(&self, token: &str) -> reqwest::Result<String> {
-        let response = self
+    pub async fn username(&self, token: &str) -> reqwest::Result<Option<String>> {
+        Ok(self
             .inner
             .get(format!("{}{}", Self::MEDIAWIKI, Self::ENDPOINT_PROFILE))
             .header("Authorization", format!("Bearer {}", token))
@@ -60,9 +62,9 @@ impl Client {
             .send()
             .await?
             .json::<UsernameResponse>()
-            .await?;
-
-        Ok(response.username)
+            .await
+            .ok()
+            .map(|res| res.username))
     }
 }
 

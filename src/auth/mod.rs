@@ -12,7 +12,7 @@ use axum::{
 use axum_login::{AuthManagerLayer, AuthManagerLayerBuilder};
 use serde::Deserialize;
 
-use crate::AppRouter;
+use crate::{AppRouter, Result};
 use backend::Credentials;
 use sessions::Sessions;
 use templates::{Login, LoginDev, Profile};
@@ -48,15 +48,15 @@ struct Token {
     token: String,
 }
 
-async fn login_dev(mut session: AuthSession, Form(token): Form<Token>) -> Response {
+async fn login_dev(mut session: AuthSession, Form(token): Form<Token>) -> Result<Response> {
     let token = token.token;
     let creds = Credentials::from_token(token);
 
-    if let Some(user) = session.authenticate(creds).await.unwrap() {
-        session.login(&user).await.unwrap();
-        Redirect::to("/auth/profile").into_response()
+    if let Some(user) = session.authenticate(creds).await? {
+        session.login(&user).await?;
+        Ok(Redirect::to("/auth/profile").into_response())
     } else {
-        (StatusCode::UNAUTHORIZED, "Developer authorization failed.").into_response()
+        Ok((StatusCode::UNAUTHORIZED, "Developer authorization failed.").into_response())
     }
 }
 

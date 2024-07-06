@@ -7,6 +7,10 @@ pub type Result<T> = std::result::Result<T, Error>;
 pub enum Error {
     #[error("Failed to communicate with the Wikidata API: {0}")]
     Client(#[from] reqwest::Error),
+
+    // external
+    #[error(transparent)]
+    Session(#[from] tower_sessions::session::Error),
 }
 
 impl IntoResponse for Error {
