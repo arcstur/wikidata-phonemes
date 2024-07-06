@@ -24,7 +24,7 @@ impl Client {
 
     /// Sends a query to the Wikidata API and deserializes
     /// the response into a list of items of type `T`.
-    #[instrument(level = "debug", skip(self), ret, err)]
+    #[instrument(level = "debug", skip(self), err)]
     pub async fn query<T: DeserializeOwned + std::fmt::Debug>(
         &self,
         query: &str,
