@@ -56,7 +56,7 @@ async fn login_dev(mut session: AuthSession, Form(token): Form<Token>) -> Respon
         session.login(&user).await.unwrap();
         Redirect::to("/auth/profile").into_response()
     } else {
-        StatusCode::UNAUTHORIZED.into_response()
+        (StatusCode::UNAUTHORIZED, "Developer authorization failed.").into_response()
     }
 }
 

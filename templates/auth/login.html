@@ -2,17 +2,7 @@
 {% block content %}
 
 <form action="/auth/login" method="post">
-  <fieldset>
-  <label for="username">username</label>
-  <input name="username" maxlength="200" placeholder="username">
-
-  <label for="password">password</label>
-  <input type="password" name="password" maxlength="200" placeholder="password">
-  </fieldset>
-  <button>Sign in</button>
+  <input type="submit" value="Sign in with Wikimedia account" disabled>
 </form>
 
-<a href="/auth/register">Sign up</a>
-
 {% endblock content %}
-
