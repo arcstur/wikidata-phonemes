@@ -1,7 +1,8 @@
-use self::super::client::Client;
-use axum::{extract::FromRef, Router};
+use axum::{extract::FromRef, routing::get, Router};
 use tower_http::{services::ServeDir, trace::TraceLayer};
 type Request = axum::http::Request<axum::body::Body>;
+
+use crate::Client;
 
 pub type AppRouter = Router<AppState>;
 
@@ -38,7 +39,7 @@ impl App {
         let state = AppState::new();
 
         Router::new()
-            // .route("/", get(index))
+            .route("/", get(index))
             .nest("/auth", super::auth::router())
             .nest("/languages", super::languages::router())
             .nest("/phonemes", super::phonemes::router())
@@ -48,3 +49,11 @@ impl App {
             .layer(trace_layer)
     }
 }
+
+async fn index() -> Index {
+    Index {}
+}
+
+#[derive(askama::Template)]
+#[template(path = "index.html")]
+struct Index {}

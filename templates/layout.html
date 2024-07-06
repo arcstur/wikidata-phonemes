@@ -13,7 +13,20 @@
 </head>
 
 <body hx-boost="true">
-  <main class="container">
+  <main class="container" hx-indicator="#navbar-indicator">
+    <nav>
+      <ul>
+        <li><a href="/"><strong>Home</strong></a></li>
+      </ul>
+      <ul>
+        <li><img class="htmx-indicator" id="navbar-indicator" src="/static/spinner.svg"></li>
+      </ul>
+      <ul>
+        <li><a href="/languages">Languages</a></li>
+        <li><a href="/phonemes">Phonemes</a></li>
+        <li><a href="/auth/profile">Profile</a></li>
+      </ul>
+    </nav>
     {% block content %}
     {% endblock %}
   </main>
