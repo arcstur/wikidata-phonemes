@@ -1,18 +1,22 @@
 <!doctype html>
-<html>
+<html lang="en">
 
 <head>
   <meta charset="utf-8">
-  <title>Wikidata Phonemes</title>
-  <link rel="stylesheet" href="/static/3p/sakura.1.5.0.css"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="color-scheme" content="light dark" />
+
+  <link rel="stylesheet" href="/static/3p/pico.red.min.css" />
   <script src="/static/3p/htmx.min.1.9.12.js"></script>
+
+  <title>Wikidata Phonemes</title>
 </head>
 
-<body style="max-width: 42em;" hx-boost="true">
-  {% block content %}
-  {% endblock %}
+<body hx-boost="true">
+  <main class="container">
+    {% block content %}
+    {% endblock %}
+  </main>
 </body>
 
 </html>
-
-
