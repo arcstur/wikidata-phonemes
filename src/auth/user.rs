@@ -35,6 +35,10 @@ impl User {
     pub fn username(&self) -> &str {
         &self.username
     }
+
+    pub fn token(&self) -> &str {
+        &self.token
+    }
 }
 
 impl std::fmt::Debug for User {
