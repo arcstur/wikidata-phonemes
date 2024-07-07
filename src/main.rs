@@ -1,20 +1,17 @@
+mod api;
 mod app;
 mod auth;
-mod client;
 mod error;
 mod languages;
 mod phonemes;
-mod wikidata;
 
 use tracing::info;
 
-use app::App;
+pub use api::{Client, WikiValue, WikidataQ};
 pub use app::AppRouter;
 pub use auth::User;
-pub use client::Client;
 pub use error::{Error, Result};
 pub use phonemes::Phoneme;
-pub use wikidata::{WikiValue, WikidataQ};
 
 #[tokio::main]
 async fn main() {
@@ -23,7 +20,7 @@ async fn main() {
         .with_ansi(false) // colors don't work well when piping to grep, filtering, etc.
         .init();
 
-    let app = App::new();
+    let app = app::App::new();
 
     let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
     info!("web server started.");

@@ -6,7 +6,7 @@ use tracing::{instrument, Level};
 use uuid::Uuid;
 
 use super::user::User;
-use crate::{Client, Result};
+use crate::{api::OAuthClient, Client, Result};
 
 #[derive(Clone)]
 pub struct Backend {
@@ -43,7 +43,8 @@ impl AuthnBackend for Backend {
         let client = Client::new();
         let user = match creds {
             Self::Credentials::Developer { token } => {
-                let Some(username) = client.username(&token).await? else {
+                let oauth = OAuthClient::new(&client, &token);
+                let Some(username) = oauth.username().await? else {
                     return Ok(None);
                 };
                 User::new(id, username, token)

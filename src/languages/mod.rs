@@ -5,7 +5,7 @@ use axum::{
     routing::get,
 };
 
-use crate::{AppRouter, Client, Phoneme, Result, WikiValue, WikidataQ};
+use crate::{phonemes::Phoneme, AppRouter, Client, Result, WikiValue, WikidataQ};
 use serde::Deserialize;
 use templates::List;
 
