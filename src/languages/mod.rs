@@ -12,7 +12,7 @@ use crate::{
     AppRouter, Client, EntityId, Result, User, WikiValue,
 };
 use serde::Deserialize;
-use templates::List;
+use templates::{List, PhonemeAdded};
 
 use self::templates::Details;
 
@@ -61,7 +61,7 @@ async fn add_phoneme(
     user: User,
     Path(id): Path<String>,
     Form(form): Form<PhonemeForm>,
-) -> Result<axum::response::Response> {
+) -> Result<PhonemeAdded> {
     let PhonemeForm {
         phoneme,
         wikipedia_url,
@@ -79,7 +79,7 @@ async fn add_phoneme(
         })
         .await?;
 
-    Ok(String::new().into_response())
+    Ok(PhonemeAdded {})
 }
 
 #[derive(Debug, Deserialize)]

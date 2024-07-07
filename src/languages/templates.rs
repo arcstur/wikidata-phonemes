@@ -31,3 +31,10 @@ pub(super) struct Details {
     pub(super) label_or_id: String,
     pub(super) id: EntityId,
 }
+
+#[derive(Template)]
+#[template(
+    source = r#"<p style="margin-bottom: 3em"> Phoneme added successfully! </p>"#,
+    ext = "html"
+)]
+pub(super) struct PhonemeAdded {}

@@ -2,7 +2,7 @@
 {% block content %}
 
 <style>
-  tbody.htmx-swapping {
+  td.htmx-swapping {
     opacity: 0;
     transition: opacity 500ms ease-out;
   }
@@ -67,8 +67,8 @@
       {% if is_logged_in %}
       <tr>
         <td colspan="3">
-          <form hx-post="/languages/{{ id.as_str() }}/add_phoneme" hx-target="closest tbody"
-            hx-swap="outerHTML swap:500ms"
+          <form hx-post="/languages/{{ id.as_str() }}/add_phoneme" hx-target="closest td"
+            hx-swap="innerHTML swap:500ms"
             hx-confirm="Are you sure you want to add the phoneme '{{ phoneme.label }}' to the language '{{ label_or_id }}'?"
             hx-indicator="next .htmx-indicator">
             <input type="hidden" name="phoneme" value="{{ phoneme.q.as_str() }}">
