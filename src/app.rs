@@ -43,6 +43,7 @@ impl App {
             .nest("/auth", super::auth::router())
             .nest("/languages", super::languages::router())
             .nest("/phonemes", super::phonemes::router())
+            .nest("/activity", super::activity::router())
             .with_state(state)
             .nest_service("/static", ServeDir::new("static"))
             .layer(auth_layer)

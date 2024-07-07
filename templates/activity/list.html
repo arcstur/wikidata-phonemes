@@ -1,0 +1,22 @@
+{% extends "layout.html" %}
+
+{% block content %}
+
+<h2> Languages worked in <a href="https://pt.wikiversity.org/wiki/Obelep%C3%A9dia">Obelepédia</a> </h2>
+
+<table>
+  <thead>
+    <th> Language </th>
+    <th> Portuguese wikipedia link </th>
+    <th> </th>
+  </thead>
+  {% for language in languages %}
+  <tr>
+    <td> <a href="https://www.wikidata.org/wiki/{{ language.qid }}">{{ language.en_label }}</a> </td>
+    <td> <a href="{{ language.pt_wikipedia }}"> Link </a> </td>
+    <td> <a href="/activity/language/{{ language.qid }}"> See </a> </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}

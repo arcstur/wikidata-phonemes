@@ -1,3 +1,4 @@
+mod activity;
 mod api;
 mod app;
 mod auth;
@@ -7,7 +8,7 @@ mod phonemes;
 
 use tracing::info;
 
-pub use api::{Client, WikiValue, EntityId};
+pub use api::{Client, EntityId, WikiValue};
 pub use app::AppRouter;
 pub use auth::User;
 pub use error::{Error, Result};
