@@ -7,7 +7,7 @@ use axum::{
 };
 
 use crate::{
-    api::{AddPhoneme, EditingClient},
+    api::{AddPhonemeInput, Editor},
     phonemes::Phoneme,
     AppRouter, Client, EntityId, Result, User, WikiValue,
 };
@@ -53,7 +53,7 @@ async fn single_language(
 #[derive(Deserialize)]
 struct PhonemeForm {
     phoneme: String,
-    reference_url: Option<String>,
+    wikipedia_url: String,
 }
 
 async fn add_phoneme(
@@ -62,16 +62,22 @@ async fn add_phoneme(
     Path(id): Path<String>,
     Form(form): Form<PhonemeForm>,
 ) -> Result<axum::response::Response> {
+    let PhonemeForm {
+        phoneme,
+        wikipedia_url,
+    } = form;
+
     let language = EntityId(id);
-    let phoneme = EntityId(form.phoneme);
+    let phoneme = EntityId(phoneme);
 
-    let editing = EditingClient::new(&client, &user);
-
-    // editing
-    //     .add_phoneme(AddPhoneme { language, phoneme })
-    //     .await?;
-
-    dbg!("would add phoneme:", AddPhoneme { language, phoneme });
+    let editor = Editor::new(&client, &user);
+    editor
+        .add_phoneme(AddPhonemeInput {
+            language,
+            phoneme,
+            wikipedia_url,
+        })
+        .await?;
 
     Ok(String::new().into_response())
 }

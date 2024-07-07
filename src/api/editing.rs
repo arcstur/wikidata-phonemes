@@ -1,22 +1,26 @@
 use serde::Serialize;
+use tracing::instrument;
 
 use super::Client;
 use crate::{auth::User, EntityId, Result};
 
-pub struct EditingClient<'a> {
+#[derive(Debug)]
+pub struct Editor<'a> {
     client: &'a Client,
     user: &'a User,
 }
 
-impl<'a> EditingClient<'a> {
+impl<'a> Editor<'a> {
     const WIKIDATA_REST: &'static str = "https://www.wikidata.org/w/rest.php/wikibase/v0";
     const P_HAS_PHONEME: &'static str = "P2587";
+    const P_WIKIMEDIA_IMPORT_URL: &'static str = "P4656";
 
     pub fn new(client: &'a Client, user: &'a User) -> Self {
         Self { client, user }
     }
 
-    pub async fn add_phoneme(&self, info: AddPhoneme) -> Result<()> {
+    #[instrument(level = "info", ret, err)]
+    pub async fn add_phoneme(&self, info: AddPhonemeInput) -> Result<()> {
         let endpoint = format!(
             "{}/entities/items/{}/statements",
             Self::WIKIDATA_REST,
@@ -31,8 +35,9 @@ impl<'a> EditingClient<'a> {
                 value: Value::Value {
                     content: info.phoneme,
                 },
+                references: vec![Reference::from_wikipedia_url(info.wikipedia_url)],
             },
-            comment: String::from("Testing out the API..."),
+            comment: String::from("Adding a phoneme."),
             bot: false,
         };
 
@@ -45,14 +50,16 @@ impl<'a> EditingClient<'a> {
             .send()
             .await?
             .error_for_status()?;
+
         Ok(())
     }
 }
 
 #[derive(Debug)]
-pub struct AddPhoneme {
+pub struct AddPhonemeInput {
     pub language: EntityId,
     pub phoneme: EntityId,
+    pub wikipedia_url: String,
 }
 
 #[derive(Serialize)]
@@ -66,6 +73,7 @@ struct AddPhonemeBody {
 struct Statement {
     property: Property,
     value: Value,
+    references: Vec<Reference>,
 }
 
 #[derive(Serialize)]
@@ -77,4 +85,30 @@ struct Property {
 #[serde(tag = "type", rename_all = "camelCase")]
 enum Value {
     Value { content: EntityId },
+}
+
+#[derive(Serialize)]
+struct Reference {
+    parts: Vec<ReferenceItem>,
+}
+
+#[derive(Serialize)]
+struct ReferenceItem {
+    property: Property,
+    value: Value,
+}
+
+impl Reference {
+    fn from_wikipedia_url(url: String) -> Self {
+        Reference {
+            parts: vec![ReferenceItem {
+                property: Property {
+                    id: EntityId::from(Editor::P_WIKIMEDIA_IMPORT_URL),
+                },
+                value: Value::Value {
+                    content: EntityId(url),
+                },
+            }],
+        }
+    }
 }

@@ -4,4 +4,44 @@
 
 <h2>Welcome to Wikidata Phonemes!</h2>
 
+<p>
+  This is the web application developed specifically for
+  <a href="https://en.wikiversity.org/wiki/Wikidata_IOLab">Wikidata IOLab</a>.
+  In here you can add phonemes to a whole bunch of languages, basing your
+  work on the work that the brazilian students of their national olympiad
+  did while editing Wikipedia.
+</p>
+
+<h3> Activity </h3>
+
+<p>
+  In <a href="/activity">Activity</a>, you can see the languages
+  that the brazilians worked on and choose one to edit on Wikidata.
+</p>
+
+<p>
+  You'll need to copy a <strong>Wikipedia permalink</strong>
+  to the revision you're
+  basing your claims to the Wikidata database.
+</p>
+
+<h3> Current status </h3>
+
+<p>
+  In <a href="/languages">Languages</a>, you can see
+  all the languages in Wikidata which have phonemes connected
+  to them. We hope to increase those numbers a lot
+  with this activity!
+</p>
+
+<h3> Account </h3>
+
+<p>
+  In order to edit on Wikidata, you'll need to log in.
+  {%- match user -%}
+  {%- when Some(user) %} We can see you are logged in as {{ user.username() }}, so everything is correct.
+  {%- when None %} We can see you are not logged in. Please <a href="/auth/login"> do so right now. </a>
+  {%- endmatch -%}
+</p>
+
 {% endblock content %}

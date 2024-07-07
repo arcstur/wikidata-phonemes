@@ -16,9 +16,13 @@
 </hgroup>
 
 
+<hgroup>
 <h2> Current phonemes </h2>
+<p> If you just added the phonemes, it will take some time for the Wikidata cache to refresh and show them here :)</p>
+</hgroup>
 
 <div class="overflow-auto">
+  {% if !phonemes.is_empty() %}
   <table>
     <thead>
       <th> Name </th>
@@ -35,6 +39,7 @@
       {% endfor %}
     </tbody>
   </table>
+  {% endif %}
 </div>
 
 <h2> Available phonemes </h2>
@@ -67,7 +72,8 @@
             hx-confirm="Are you sure you want to add the phoneme '{{ phoneme.label }}' to the language '{{ label_or_id }}'?"
             hx-indicator="next .htmx-indicator">
             <input type="hidden" name="phoneme" value="{{ phoneme.q.as_str() }}">
-            <input type="text" name="reference_url" aria-label="Reference URL" placeholder="Reference URL" required>
+            <input type="text" name="wikipedia_url" aria-label="Wikipedia permalink" placeholder="Wikipedia permalink" required pattern=".*wikipedia.*oldid.*">
+            <small>A Wikipedia permalink is of the form "https://pt.wikipedia.org/....<strong>oldid</strong>=&lt;some number&gt;"</small>
             <input type="submit" value="Add">
           </form>
           <img class="htmx-indicator" src="/static/spinner.svg"

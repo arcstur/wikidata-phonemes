@@ -11,7 +11,7 @@ pub(super) struct List {
 
 impl List {
     fn language_count(&self) -> usize {
-        self.languages.iter().count()
+        self.languages.len()
     }
 
     fn total_phoneme_count(&self) -> u32 {

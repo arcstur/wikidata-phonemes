@@ -3,12 +3,12 @@ mod models;
 mod oauth;
 mod querying;
 
-pub use editing::{AddPhoneme, EditingClient};
+pub use editing::{AddPhonemeInput, Editor};
 pub use models::{EntityId, WikiValue};
 pub use oauth::OAuthClient;
 
 /// HTTP client to communicate with the Wikidata API.
-#[derive(Clone)]
+#[derive(Clone, Debug)]
 pub struct Client {
     inner: reqwest::Client,
 }

@@ -2,6 +2,7 @@ use axum::{extract::FromRef, routing::get, Router};
 use tower_http::{services::ServeDir, trace::TraceLayer};
 type Request = axum::http::Request<axum::body::Body>;
 
+use super::User;
 use crate::Client;
 
 pub type AppRouter = Router<AppState>;
@@ -51,10 +52,12 @@ impl App {
     }
 }
 
-async fn index() -> Index {
-    Index {}
+async fn index(user: Option<User>) -> Index {
+    Index { user }
 }
 
 #[derive(askama::Template)]
 #[template(path = "index.html")]
-struct Index {}
+struct Index {
+    user: Option<User>,
+}
