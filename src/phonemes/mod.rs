@@ -2,7 +2,7 @@ mod templates;
 
 use axum::{extract::State, routing::get};
 
-use crate::{AppRouter, Client, Result, WikiValue, WikidataQ};
+use crate::{AppRouter, Client, EntityId, Result, WikiValue};
 use serde::Deserialize;
 use templates::List;
 
@@ -13,7 +13,7 @@ pub fn router() -> AppRouter {
 #[derive(Debug, Deserialize)]
 pub struct Phoneme {
     #[serde(rename = "phoneme")]
-    pub q: WikidataQ,
+    pub q: EntityId,
     #[serde(rename = "phonemeLabel")]
     pub label: WikiValue<String>,
     pub transcriptions: WikiValue<String>,
@@ -29,7 +29,7 @@ impl Phoneme {
         Ok(client.query::<Self>(query).await?)
     }
 
-    pub async fn by_language(client: &Client, language: WikidataQ) -> Result<Vec<Self>> {
+    pub async fn by_language(client: &Client, language: EntityId) -> Result<Vec<Self>> {
         let query = &Self::BY_LANGUAGE.replace("$1", &language.as_str());
         Ok(client.query::<Self>(query).await?)
     }
@@ -53,7 +53,7 @@ mod tests {
     #[tokio::test]
     async fn list_phonemes_english() {
         let client = Client::new();
-        let english_phonemes = Phoneme::by_language(&client, WikidataQ(1860))
+        let english_phonemes = Phoneme::by_language(&client, EntityId::from("Q1860"))
             .await
             .unwrap();
         assert!(english_phonemes.len() > 1);

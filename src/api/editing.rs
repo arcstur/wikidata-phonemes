@@ -1,7 +1,7 @@
 use serde::Serialize;
 
 use super::Client;
-use crate::{auth::User, Result, WikidataQ};
+use crate::{auth::User, EntityId, Result};
 
 struct EditingClient<'a> {
     client: &'a Client,
@@ -22,10 +22,10 @@ impl<'a> EditingClient<'a> {
         let body = AddPhonemeBody {
             statement: Statement {
                 property: Property {
-                    id: Self::P_HAS_PHONEME,
+                    id: EntityId::from(Self::P_HAS_PHONEME),
                 },
                 value: Value::Value {
-                    content: info.phoneme.as_str(),
+                    content: info.phoneme,
                 },
             },
             comment: String::from("Testing out the API..."),
@@ -46,8 +46,8 @@ impl<'a> EditingClient<'a> {
 }
 
 pub struct AddPhoneme {
-    pub language: WikidataQ,
-    pub phoneme: WikidataQ,
+    pub language: EntityId,
+    pub phoneme: EntityId,
 }
 
 #[derive(Serialize)]
@@ -65,11 +65,11 @@ struct Statement {
 
 #[derive(Serialize)]
 struct Property {
-    id: &'static str,
+    id: EntityId,
 }
 
 #[derive(Serialize)]
 #[serde(tag = "type", rename_all = "camelCase")]
 enum Value {
-    Value { content: String },
+    Value { content: EntityId },
 }

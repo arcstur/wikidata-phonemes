@@ -7,7 +7,7 @@ mod phonemes;
 
 use tracing::info;
 
-pub use api::{Client, WikiValue, WikidataQ};
+pub use api::{Client, WikiValue, EntityId};
 pub use app::AppRouter;
 pub use auth::User;
 pub use error::{Error, Result};

@@ -5,7 +5,7 @@ use axum::{
     routing::get,
 };
 
-use crate::{phonemes::Phoneme, AppRouter, Client, Result, WikiValue, WikidataQ};
+use crate::{phonemes::Phoneme, AppRouter, Client, EntityId, Result, WikiValue};
 use serde::Deserialize;
 use templates::List;
 
@@ -22,15 +22,15 @@ async fn list_languages(State(client): State<Client>) -> Result<List> {
     Ok(List { languages })
 }
 
-async fn single_language(State(client): State<Client>, Path(id): Path<u32>) -> Result<Details> {
-    let phonemes = Phoneme::by_language(&client, WikidataQ(id)).await?;
+async fn single_language(State(client): State<Client>, Path(id): Path<String>) -> Result<Details> {
+    let phonemes = Phoneme::by_language(&client, EntityId(id)).await?;
     Ok(Details { phonemes })
 }
 
 #[derive(Debug, Deserialize)]
 struct Language {
     #[serde(rename = "language")]
-    q: WikidataQ,
+    q: EntityId,
     #[serde(rename = "languageLabel")]
     label: WikiValue<String>,
     phoneme_count: WikiValue<String>,

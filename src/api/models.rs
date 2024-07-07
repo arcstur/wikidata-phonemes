@@ -1,23 +1,31 @@
 use std::fmt::Display;
 
-use serde::{de::Error, Deserialize, Deserializer};
+use serde::{de::Error, Deserialize, Deserializer, Serialize};
 
-#[derive(Debug, Deserialize)]
-pub struct WikidataQ(#[serde(deserialize_with = "from_q_uri")] pub u32);
+#[derive(Debug, Deserialize, Serialize)]
+pub struct EntityId(#[serde(deserialize_with = "from_uri")] pub String);
 
-impl WikidataQ {
-    pub fn as_str(&self) -> String {
-        format!("Q{}", self.0)
+impl EntityId {
+    pub fn as_str(&self) -> &str {
+        &self.0
+    }
+
+    pub fn into_inner(self) -> String {
+        self.0
+    }
+
+    pub fn from(s: &str) -> Self {
+        Self(s.to_owned())
     }
 }
 
-impl Display for WikidataQ {
+impl Display for EntityId {
     fn fmt(&self, f: &mut std::fmt::Formatter<'_>) -> std::fmt::Result {
-        write!(f, "http://www.wikidata.org/entity/Q{}", self.0)
+        write!(f, "http://www.wikidata.org/entity/{}", self.0)
     }
 }
 
-fn from_q_uri<'de, D>(deserializer: D) -> Result<u32, D::Error>
+fn from_uri<'de, D>(deserializer: D) -> Result<String, D::Error>
 where
     D: Deserializer<'de>,
 {
@@ -25,10 +33,10 @@ where
     let s = uri.value;
 
     let (_, id) = s
-        .rsplit_once("/entity/Q")
-        .ok_or(D::Error::custom(format!("no /entity/Q in URI: {}", s)))?;
+        .rsplit_once("/entity/")
+        .ok_or(D::Error::custom(format!("no /entity/ in URI: {}", s)))?;
 
-    id.parse::<u32>().map_err(D::Error::custom)
+    Ok(id.to_owned())
 }
 
 #[derive(Debug, Deserialize)]

@@ -3,7 +3,7 @@ mod models;
 mod oauth;
 mod querying;
 
-pub use models::{WikiValue, WikidataQ};
+pub use models::{WikiValue, EntityId};
 pub use oauth::OAuthClient;
 
 /// HTTP client to communicate with the Wikidata API.
