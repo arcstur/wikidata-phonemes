@@ -1,9 +1,18 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<h1> Language X </h1>
+<hgroup>
+<h1>
+  {%- match label -%}
+    {%- when Some with (s) -%}
+      {{ s }}
+    {%- when None -%}
+      Language {{ id.as_str() }}
+  {%- endmatch -%}
+</h1>
+<p> Phonemes ({{ phonemes.len() }})</p>
+</hgroup>
 
-<h2> Phonemes ({{ phonemes.len() }})</h2>
 
 <table>
   <thead>
@@ -16,20 +25,19 @@
     <td> <a href="{{ phoneme.q }}">{{ phoneme.label }}</a> </td>
     <td> {{ phoneme.transcriptions }} </td>
     <td>
-    {% match phoneme.audio %}
+      {% match phoneme.audio %}
       {% when Some(s) %}
-        <audio controls style="display: none" id="audio-{{ loop.index }}">
-          <source src="{{ s }}">
-        </audio>
-        <button onclick="document.getElementById('audio-{{ loop.index }}').play()">
-          Listen
-        </button>
+      <audio controls style="display: none" id="audio-{{ loop.index }}">
+        <source src="{{ s }}">
+      </audio>
+      <button onclick="document.getElementById('audio-{{ loop.index }}').play()">
+        Listen
+      </button>
       {% when None %}
-    {% endmatch %}
+      {% endmatch %}
     </td>
   </tr>
   {% endfor %}
 </table>
 
 {% endblock content %}
-

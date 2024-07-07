@@ -2,9 +2,11 @@ use serde::{de::DeserializeOwned, Deserialize};
 use tracing::{debug, instrument};
 
 use super::Client;
+use crate::{EntityId, Result};
 
 impl Client {
     const QUERY_ENDPOINT: &'static str = "https://query.wikidata.org/sparql";
+    const WIKIDATA_REST: &'static str = "https://www.wikidata.org/w/rest.php/wikibase/v0";
 
     /// Sends a query to the Wikidata API and deserializes
     /// the response into a list of items of type `T`.
@@ -24,6 +26,24 @@ impl Client {
             .await?;
 
         Ok(response.results.bindings)
+    }
+
+    /// Obtains the english label of an entity.
+    pub async fn english_label(&self, id: &EntityId) -> Result<Option<String>> {
+        debug!("sending request");
+        let endpoint = format!(
+            "{}/entities/items/{}/labels/en",
+            Self::WIKIDATA_REST,
+            id.as_str()
+        );
+        Ok(self
+            .inner
+            .get(endpoint)
+            .send()
+            .await?
+            .json::<String>()
+            .await
+            .ok())
     }
 }
 
@@ -58,5 +78,15 @@ mod tests {
             .query::<Value>("malformed query")
             .await
             .unwrap_err();
+    }
+
+    #[tokio::test]
+    async fn english_label() {
+        let label = Client::new()
+            .english_label(&EntityId::from("Q21117"))
+            .await
+            .unwrap()
+            .unwrap();
+        assert_eq!(label, "Central Alaskan Yup'ik");
     }
 }

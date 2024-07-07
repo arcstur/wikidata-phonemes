@@ -1,7 +1,7 @@
 use askama::Template;
 
 use super::Language;
-use crate::Phoneme;
+use crate::{EntityId, Phoneme};
 
 #[derive(Template)]
 #[template(path = "languages/list.html")]
@@ -26,4 +26,6 @@ impl List {
 #[template(path = "languages/details.html")]
 pub(super) struct Details {
     pub(super) phonemes: Vec<Phoneme>,
+    pub(super) label: Option<String>,
+    pub(super) id: EntityId,
 }

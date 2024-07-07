@@ -23,8 +23,14 @@ async fn list_languages(State(client): State<Client>) -> Result<List> {
 }
 
 async fn single_language(State(client): State<Client>, Path(id): Path<String>) -> Result<Details> {
-    let phonemes = Phoneme::by_language(&client, EntityId(id)).await?;
-    Ok(Details { phonemes })
+    let id = EntityId(id);
+    let phonemes = Phoneme::by_language(&client, &id).await?;
+    let label = client.english_label(&id).await?;
+    Ok(Details {
+        phonemes,
+        label,
+        id,
+    })
 }
 
 #[derive(Debug, Deserialize)]
