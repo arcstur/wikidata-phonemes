@@ -1,6 +1,12 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<h2> Languages with phonemes in Wikidata </h2>
+<ul>
+  <li> Count: {{ Self::language_count(self) }} </li>
+  <li> Total phoneme count: {{ Self::total_phoneme_count(self) }} </li>
+</ul>
+
 <table>
   <thead>
     <th> Language </th>
