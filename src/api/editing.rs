@@ -3,7 +3,7 @@ use serde::Serialize;
 use super::Client;
 use crate::{auth::User, EntityId, Result};
 
-struct EditingClient<'a> {
+pub struct EditingClient<'a> {
     client: &'a Client,
     user: &'a User,
 }
@@ -11,6 +11,10 @@ struct EditingClient<'a> {
 impl<'a> EditingClient<'a> {
     const WIKIDATA_REST: &'static str = "https://www.wikidata.org/w/rest.php/wikibase/v0";
     const P_HAS_PHONEME: &'static str = "P2587";
+
+    pub fn new(client: &'a Client, user: &'a User) -> Self {
+        Self { client, user }
+    }
 
     pub async fn add_phoneme(&self, info: AddPhoneme) -> Result<()> {
         let endpoint = format!(
@@ -45,6 +49,7 @@ impl<'a> EditingClient<'a> {
     }
 }
 
+#[derive(Debug)]
 pub struct AddPhoneme {
     pub language: EntityId,
     pub phoneme: EntityId,

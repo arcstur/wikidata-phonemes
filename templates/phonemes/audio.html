@@ -1,0 +1,7 @@
+{% match phoneme.audio %}
+{% when Some(s) %}
+<button class="secondary" onclick="(new Audio('{{ s }}').play())">
+  Listen
+</button>
+{% when None %}
+{% endmatch %}

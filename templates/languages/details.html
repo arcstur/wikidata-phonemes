@@ -1,43 +1,83 @@
 {% extends "layout.html" %}
 {% block content %}
 
+<style>
+  tbody.htmx-swapping {
+    opacity: 0;
+    transition: opacity 500ms ease-out;
+  }
+</style>
+
 <hgroup>
-<h1>
-  {%- match label -%}
-    {%- when Some with (s) -%}
-      {{ s }}
-    {%- when None -%}
-      Language {{ id.as_str() }}
-  {%- endmatch -%}
-</h1>
-<p> Phonemes ({{ phonemes.len() }})</p>
+  <h1>
+    {{ label_or_id }}
+  </h1>
+  <p> Phonemes ({{ phonemes.len() }})</p>
 </hgroup>
 
 
-<table>
-  <thead>
-    <th> Name </th>
-    <th> IPA </th>
-    <th> Audio </th>
-  </thead>
-  {% for phoneme in phonemes %}
-  <tr>
-    <td> <a href="{{ phoneme.q }}">{{ phoneme.label }}</a> </td>
-    <td> {{ phoneme.transcriptions }} </td>
-    <td>
-      {% match phoneme.audio %}
-      {% when Some(s) %}
-      <audio controls style="display: none" id="audio-{{ loop.index }}">
-        <source src="{{ s }}">
-      </audio>
-      <button onclick="document.getElementById('audio-{{ loop.index }}').play()">
-        Listen
-      </button>
-      {% when None %}
-      {% endmatch %}
-    </td>
-  </tr>
-  {% endfor %}
-</table>
+<h2> Current phonemes </h2>
+
+<div class="overflow-auto">
+  <table>
+    <thead>
+      <th> Name </th>
+      <th> Symbol </th>
+      <th> Audio </th>
+    </thead>
+    <tbody>
+      {% for phoneme in phonemes %}
+      <tr>
+        <td> <a href="{{ phoneme.q }}">{{ phoneme.label }}</a> </td>
+        <td> {{ phoneme.transcriptions }} </td>
+        <td> {% include "phonemes/audio.html" %} </td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<h2> Available phonemes </h2>
+
+{% if !is_logged_in %}
+<form action="/auth/login">
+  <input type="submit" value="Log in to edit phonemes">
+</form>
+{% endif %}
+
+<div class="overflow-auto">
+  <table class="striped">
+    <thead>
+      <th> Name </th>
+      <th> Symbol </th>
+      <th> Audio </th>
+    </thead>
+    {% for phoneme in available_phonemes %}
+    <tbody>
+      <tr>
+        <td> <a href="{{ phoneme.q }}"><strong>{{ phoneme.label }}</strong></a> </td>
+        <td> {{ phoneme.transcriptions }} </td>
+        <td> {% include "phonemes/audio.html" %} </td>
+      </tr>
+      {% if is_logged_in %}
+      <tr>
+        <td colspan="3">
+          <form hx-post="/languages/{{ id.as_str() }}/add_phoneme" hx-target="closest tbody"
+            hx-swap="outerHTML swap:500ms"
+            hx-confirm="Are you sure you want to add the phoneme '{{ phoneme.label }}' to the language '{{ label_or_id }}'?"
+            hx-indicator="next .htmx-indicator">
+            <input type="hidden" name="phoneme" value="{{ phoneme.q.as_str() }}">
+            <input type="text" name="reference_url" aria-label="Reference URL" placeholder="Reference URL" required>
+            <input type="submit" value="Add">
+          </form>
+          <img class="htmx-indicator" src="/static/spinner.svg"
+            style="display: block; margin-left: auto; margin-right: auto;">
+        </td>
+      </tr>
+    </tbody>
+    {% endif %}
+    {% endfor %}
+  </table>
+</div>
 
 {% endblock content %}

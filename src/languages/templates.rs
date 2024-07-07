@@ -25,7 +25,9 @@ impl List {
 #[derive(Template)]
 #[template(path = "languages/details.html")]
 pub(super) struct Details {
+    pub(super) is_logged_in: bool,
     pub(super) phonemes: Vec<Phoneme>,
-    pub(super) label: Option<String>,
+    pub(super) available_phonemes: Vec<Phoneme>,
+    pub(super) label_or_id: String,
     pub(super) id: EntityId,
 }
