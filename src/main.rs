@@ -23,7 +23,7 @@ async fn main() {
 
     let app = app::App::new();
 
-    let listener = tokio::net::TcpListener::bind("0.0.0.0:3000").await.unwrap();
+    let listener = tokio::net::TcpListener::bind("0.0.0.0:8000").await.unwrap();
     info!("web server started.");
     axum::serve(listener, app.into_router().await)
         .await

@@ -18,7 +18,7 @@ COPY ./templates ./templates
 RUN cargo build --release
 
 FROM gcr.io/distroless/cc-debian12 AS runtime
-EXPOSE 3000
+EXPOSE 8000
 WORKDIR /app
 COPY --from=builder /app/target/release/wikidata-phonemes ./wikidata-phonemes
 COPY ./static ./static
