@@ -2,7 +2,6 @@ mod templates;
 
 use axum::{
     extract::{Form, Path, State},
-    response::IntoResponse,
     routing::{get, post},
 };
 
