@@ -16,6 +16,8 @@ pub use phonemes::Phoneme;
 
 #[tokio::main]
 async fn main() {
+    dotenvy::dotenv().ok();
+
     tracing_subscriber::fmt()
         .with_env_filter(tracing_subscriber::EnvFilter::from_default_env()) // allows using RUST_LOG env var
         .with_ansi(false) // colors don't work well when piping to grep, filtering, etc.
