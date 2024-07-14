@@ -12,12 +12,12 @@
   <h1>
     {{ label_or_id }}
   </h1>
-  <p> Phonemes ({{ phonemes.len() }})</p>
+  <p><a href="https://www.wikidata.org/wiki/{{ id.as_str() }}">Wikidata</a></p>
 </hgroup>
 
 
 <hgroup>
-<h2> Current phonemes </h2>
+<h2> Current phonemes ({{ phonemes.len() }}) </h2>
 <p> If you just added the phonemes, it will take some time for the Wikidata cache to refresh and show them here :)</p>
 </hgroup>
 
@@ -42,14 +42,14 @@
   {% endif %}
 </div>
 
-<h2> Available phonemes </h2>
 
 {% if !is_logged_in %}
 <form action="/auth/login">
-  <input type="submit" value="Log in to edit phonemes">
+  <input type="submit" value="Log in to add phonemes">
 </form>
-{% endif %}
+{% else %}
 
+<h2> Available phonemes </h2>
 <div class="overflow-auto">
   <table class="striped">
     <thead>
@@ -85,5 +85,6 @@
     {% endfor %}
   </table>
 </div>
+{% endif %}
 
 {% endblock content %}

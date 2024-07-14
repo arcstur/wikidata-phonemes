@@ -34,12 +34,18 @@ async fn single_language(
 ) -> Result<Details> {
     let id = EntityId(id);
     let phonemes = Phoneme::by_language(&client, &id).await?;
-    let available_phonemes = Phoneme::by_language_opposite(&client, &id).await?;
     let label_or_id = client
         .english_label(&id)
         .await?
         .unwrap_or(format!("Language {id}"));
     let is_logged_in = user.is_some();
+
+    let available_phonemes = if is_logged_in {
+        Phoneme::by_language_opposite(&client, &id).await?
+    } else {
+        Vec::new()
+    };
+
     Ok(Details {
         is_logged_in,
         phonemes,
