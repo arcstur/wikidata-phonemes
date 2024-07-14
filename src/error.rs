@@ -1,5 +1,6 @@
 use askama::Template;
 use axum::{http::StatusCode, response::IntoResponse};
+use oauth2::{basic::BasicRequestTokenError, reqwest::AsyncHttpClientError};
 
 pub type Result<T> = std::result::Result<T, Error>;
 
@@ -11,6 +12,9 @@ pub enum Error {
     // external
     #[error(transparent)]
     Session(#[from] tower_sessions::session::Error),
+
+    #[error("There was an error communicating with the Mediawiki's OAuth API: {0}")]
+    Oauth(#[from] BasicRequestTokenError<AsyncHttpClientError>),
 }
 
 impl IntoResponse for Error {
