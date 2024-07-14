@@ -1,5 +1,6 @@
 use axum::async_trait;
 use tower_sessions::{
+    cookie::SameSite,
     session::{Id, Record},
     Expiry, SessionManagerLayer, SessionStore,
 };
@@ -23,7 +24,9 @@ impl Sessions {
 
     pub async fn layer() -> SessionLayer {
         let store = Sessions::new();
-        SessionLayer::new(store).with_expiry(Expiry::OnInactivity(YEAR))
+        SessionLayer::new(store)
+            .with_same_site(SameSite::Lax)
+            .with_expiry(Expiry::OnInactivity(YEAR))
     }
 }
 
