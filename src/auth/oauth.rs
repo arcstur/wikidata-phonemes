@@ -1,6 +1,5 @@
 use axum::{
     extract::Query,
-    http::StatusCode,
     response::{IntoResponse, Redirect, Response},
 };
 use oauth2::CsrfToken;
@@ -34,16 +33,13 @@ pub(super) async fn callback(
         new_state: authorization.new_state,
     };
 
-    if let Some(user) = auth_session.authenticate(creds).await? {
-        auth_session.login(&user).await?;
-        Ok(Redirect::to("/auth/profile").into_response())
-    } else {
-        Ok((
-            StatusCode::UNAUTHORIZED,
-            "Authorization with Wikimedia account failed.",
-        )
-            .into_response())
-    }
+    let user = auth_session
+        .authenticate(creds)
+        .await?
+        .ok_or(Error::AuthorizationFailed)?;
+
+    auth_session.login(&user).await?;
+    Ok(Redirect::to("/auth/profile").into_response())
 }
 
 pub(super) async fn redirect(auth_session: AuthSession, session: Session) -> Result<Redirect> {

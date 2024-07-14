@@ -1,5 +1,4 @@
 use axum::{
-    http::StatusCode,
     response::{IntoResponse, Redirect, Response},
     Form,
 };
@@ -10,7 +9,7 @@ use super::{
     templates::{Login, LoginDev, Profile},
     AuthSession, User,
 };
-use crate::Result;
+use crate::{Error, Result};
 
 pub(super) async fn login_get(session: AuthSession) -> Response {
     if session.user.is_some() {
@@ -33,12 +32,13 @@ pub(super) async fn login_dev(mut session: AuthSession, Form(dev): Form<Dev>) ->
     let token = dev.token;
     let creds = Credentials::from_token(token);
 
-    if let Some(user) = session.authenticate(creds).await? {
-        session.login(&user).await?;
-        Ok(Redirect::to("/auth/profile").into_response())
-    } else {
-        Ok((StatusCode::UNAUTHORIZED, "Developer authorization failed.").into_response())
-    }
+    let user = session
+        .authenticate(creds)
+        .await?
+        .ok_or(Error::AuthorizationFailed)?;
+
+    session.login(&user).await?;
+    Ok(Redirect::to("/auth/profile").into_response())
 }
 
 pub(super) async fn logout(mut session: AuthSession) -> impl IntoResponse {

@@ -3,6 +3,7 @@ use axum::{http::StatusCode, response::IntoResponse};
 use oauth2::{basic::BasicRequestTokenError, reqwest::AsyncHttpClientError};
 
 pub type Result<T> = std::result::Result<T, Error>;
+use Error::*;
 
 #[derive(Debug, thiserror::Error)]
 pub enum Error {
@@ -12,6 +13,8 @@ pub enum Error {
     // auth
     #[error("OAuth callback was reached but the user does not have the original CSRF state in its session.")]
     MissingOldState,
+    #[error("Authorization failed.")]
+    AuthorizationFailed,
 
     // external
     #[error(transparent)]
@@ -24,13 +27,20 @@ pub enum Error {
 impl IntoResponse for Error {
     fn into_response(self) -> axum::response::Response {
         tracing::error!(error = ?self);
-        (
-            StatusCode::INTERNAL_SERVER_ERROR,
-            ErrorTemplate {
-                message: "An unexpected error happened. Please, try again.",
-            },
-        )
-            .into_response()
+
+        let status_code = match self {
+            MissingOldState | AuthorizationFailed => StatusCode::UNAUTHORIZED,
+            _ => StatusCode::INTERNAL_SERVER_ERROR,
+        };
+
+        let message = match self {
+            AuthorizationFailed => "Authorization failed.",
+            _ => "An error happened. Please, try again.",
+        };
+
+        let template = ErrorTemplate { message };
+
+        (status_code, template).into_response()
     }
 }
 
