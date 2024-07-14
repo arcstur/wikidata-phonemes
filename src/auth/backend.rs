@@ -31,13 +31,13 @@ impl Backend {
     }
 
     fn media_wiki_client() -> BasicClient {
-        let client_id = env::var("CLIENT_ID")
+        let client_id = env::var("OAUTH_CLIENT_ID")
             .map(ClientId::new)
-            .expect("CLIENT_ID should be provided.");
+            .expect("OAUTH_CLIENT_ID should be provided.");
 
-        let client_secret = env::var("CLIENT_SECRET")
+        let client_secret = env::var("OAUTH_CLIENT_SECRET")
             .map(ClientSecret::new)
-            .expect("CLIENT_SECRET should be provided");
+            .expect("OAUTH_CLIENT_SECRET should be provided");
 
         let auth_url =
             AuthUrl::new("https://www.mediawiki.org/w/rest.php/oauth2/authorize".to_string())
