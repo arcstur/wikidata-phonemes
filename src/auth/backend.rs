@@ -62,8 +62,8 @@ pub enum Credentials {
     },
     Oauth {
         code: String,
-        old_state: CsrfToken,
-        new_state: CsrfToken,
+        original_state: CsrfToken,
+        incoming_state: CsrfToken,
     },
 }
 
@@ -86,11 +86,11 @@ impl AuthnBackend for Backend {
             Credentials::Developer { token } => token,
             Credentials::Oauth {
                 code,
-                old_state,
-                new_state,
+                original_state,
+                incoming_state,
             } => {
                 // Ensure the CSRF state has not been tampered with.
-                if old_state.secret() != new_state.secret() {
+                if original_state.secret() != incoming_state.secret() {
                     return Ok(None);
                 };
 

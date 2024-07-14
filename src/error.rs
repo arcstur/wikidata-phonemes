@@ -12,7 +12,7 @@ pub enum Error {
 
     // auth
     #[error("OAuth callback was reached but the user does not have the original CSRF state in its session.")]
-    MissingOldState,
+    MissingOriginalState,
     #[error("Authorization failed.")]
     AuthorizationFailed,
 
@@ -29,7 +29,7 @@ impl IntoResponse for Error {
         tracing::error!(error = ?self);
 
         let status_code = match self {
-            MissingOldState | AuthorizationFailed => StatusCode::UNAUTHORIZED,
+            MissingOriginalState | AuthorizationFailed => StatusCode::UNAUTHORIZED,
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         };
 
