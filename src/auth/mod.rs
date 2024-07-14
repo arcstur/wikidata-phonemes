@@ -1,10 +1,11 @@
 mod backend;
 mod handlers;
+mod oauth;
 mod sessions;
 mod templates;
 mod user;
 
-use axum::routing::get;
+use axum::routing::{get, post};
 use axum_login::{AuthManagerLayer, AuthManagerLayerBuilder};
 
 pub use self::{backend::Backend, sessions::Sessions, user::User};
@@ -28,4 +29,6 @@ pub fn router() -> AppRouter {
         )
         .route("/logout", get(handlers::logout))
         .route("/profile", get(handlers::profile))
+        .route("/oauth/callback", get(oauth::callback))
+        .route("/oauth/redirect", post(oauth::redirect))
 }

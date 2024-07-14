@@ -1,8 +1,8 @@
 {% extends "layout.html" %}
 {% block content %}
 
-<form action="/auth/login" method="post">
-  <input type="submit" value="Sign in with Wikimedia account" disabled>
+<form action="/oauth/redirect" method="post">
+  <input type="submit" value="Sign in with Wikimedia account">
 </form>
 
 {% endblock content %}

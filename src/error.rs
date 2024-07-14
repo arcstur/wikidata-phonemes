@@ -9,6 +9,10 @@ pub enum Error {
     #[error("Failed to communicate with the Wikidata API: {0}")]
     Client(#[from] reqwest::Error),
 
+    // auth
+    #[error("OAuth callback was reached but the user does not have the original CSRF state in its session.")]
+    MissingOldState,
+
     // external
     #[error(transparent)]
     Session(#[from] tower_sessions::session::Error),
