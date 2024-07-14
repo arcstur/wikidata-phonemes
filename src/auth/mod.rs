@@ -29,6 +29,6 @@ pub fn router() -> AppRouter {
         )
         .route("/logout", get(handlers::logout))
         .route("/profile", get(handlers::profile))
-        .route("/oauth/callback", get(oauth::callback))
-        .route("/oauth/redirect", post(oauth::redirect))
+        .route("/callback", get(oauth::callback))
+        .route("/redirect", post(oauth::redirect))
 }
