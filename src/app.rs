@@ -1,4 +1,5 @@
 use axum::{extract::FromRef, routing::get, Router};
+use sqlx::{sqlite::SqlitePoolOptions, SqlitePool};
 use tower_http::{services::ServeDir, trace::TraceLayer};
 type Request = axum::http::Request<axum::body::Body>;
 
@@ -10,13 +11,22 @@ pub type AppRouter = Router<AppState>;
 #[derive(Clone, FromRef)]
 pub struct AppState {
     client: Client,
+    pub pool: SqlitePool,
 }
 
 impl AppState {
-    fn new() -> Self {
+    async fn new() -> Self {
         Self {
             client: Client::new(),
+            pool: Self::pool().await,
         }
+    }
+
+    async fn pool() -> SqlitePool {
+        SqlitePoolOptions::new()
+            .connect("sqlite:phonemes.db")
+            .await
+            .expect("can't connect to the database")
     }
 }
 
@@ -35,9 +45,10 @@ impl App {
                 tracing::debug!(method = %req.method(), uri = %req.uri(), "started");
             });
 
-        let auth_layer = super::auth::layer().await;
+        let state = AppState::new().await;
+        let pool = state.pool.clone();
 
-        let state = AppState::new();
+        let auth_layer = super::auth::layer(pool).await;
 
         Router::new()
             .route("/", get(index))

@@ -1,10 +1,11 @@
 use axum::async_trait;
+use sqlx::SqlitePool;
 use tower_sessions::{
     cookie::SameSite,
     session::{Id, Record},
     Expiry, SessionManagerLayer, SessionStore,
 };
-use tower_sessions_moka_store::MokaStore;
+use tower_sessions_sqlx_store::SqliteStore;
 use tracing::instrument;
 
 const YEAR: time::Duration = time::Duration::days(365);
@@ -13,17 +14,21 @@ pub type SessionLayer = SessionManagerLayer<Sessions>;
 
 #[derive(Debug, Clone)]
 pub struct Sessions {
-    inner: MokaStore,
+    inner: SqliteStore,
 }
 
 impl Sessions {
-    fn new() -> Self {
-        let inner = MokaStore::new(Some(500));
+    async fn new(pool: SqlitePool) -> Self {
+        let inner = SqliteStore::new(pool);
+        inner
+            .migrate()
+            .await
+            .expect("failed to run session migrations");
         Self { inner }
     }
 
-    pub async fn layer() -> SessionLayer {
-        let store = Sessions::new();
+    pub async fn layer(pool: SqlitePool) -> SessionLayer {
+        let store = Self::new(pool).await;
         SessionLayer::new(store)
             .with_same_site(SameSite::Lax)
             .with_expiry(Expiry::OnInactivity(YEAR))
