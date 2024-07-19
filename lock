@@ -1,0 +1,19 @@
+/tmp, [07/07/2024 22:42]
+end point /available_phonemes que retorna a lista pra editar
+
+/tmp, [07/07/2024 22:42]
+endpoint /lock e /unlock pra trancar pra um usuário
+
+/tmp, [07/07/2024 22:42]
+ao carregar a língua se não estiver logado nem mostra os fonemas
+
+/tmp, [07/07/2024 22:43]
+se tiver logado, mostra só botão pra fazer um lock 
+
+ao pedir o lock, retorna-se a tabela
+
+/tmp, [07/07/2024 22:43]
+ao deslogar, solta os locks
+
+/tmp, [07/07/2024 22:43]
+se ao carregar o usuário ja possuir o lock, aí já mostra a tabela de available phonemes direto
