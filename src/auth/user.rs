@@ -1,18 +1,17 @@
 use axum::{async_trait, extract::FromRequestParts, http::request::Parts, response::Redirect};
 use axum_login::AuthUser;
-use uuid::Uuid;
 
 use super::AuthSession;
 
 #[derive(Clone)]
 pub struct User {
-    id: Uuid,
+    id: i64,
     username: String,
     token: String,
 }
 
 impl AuthUser for User {
-    type Id = Uuid;
+    type Id = i64;
 
     fn id(&self) -> Self::Id {
         self.id
@@ -24,7 +23,7 @@ impl AuthUser for User {
 }
 
 impl User {
-    pub(super) fn new(id: Uuid, username: String, token: String) -> Self {
+    pub(super) fn new(id: i64, username: String, token: String) -> Self {
         Self {
             id,
             username,

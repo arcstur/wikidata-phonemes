@@ -2,32 +2,28 @@ use std::env;
 
 use axum::async_trait;
 use axum_login::{AuthnBackend, UserId};
-use moka::future::Cache;
 use oauth2::{
     basic::BasicClient, reqwest::async_http_client, url::Url, AuthUrl, AuthorizationCode, ClientId,
     ClientSecret, CsrfToken, TokenResponse, TokenUrl,
 };
 use serde::Deserialize;
+use sqlx::SqlitePool;
 use tracing::{instrument, Level};
-use uuid::Uuid;
 
 use super::user::User;
 use crate::{api::OAuthClient, Client, Result};
 
 #[derive(Clone)]
 pub struct Backend {
-    cache: Cache<Uuid, User>,
+    pool: SqlitePool,
     oauth_client: BasicClient,
 }
 
 impl Backend {
-    pub fn new() -> Self {
+    pub fn new(pool: SqlitePool) -> Self {
         let oauth_client = Self::media_wiki_client();
 
-        Self {
-            cache: Cache::new(1000),
-            oauth_client,
-        }
+        Self { pool, oauth_client }
     }
 
     fn media_wiki_client() -> BasicClient {
@@ -52,6 +48,24 @@ impl Backend {
 
     pub fn oauth_url(&self) -> (Url, CsrfToken) {
         self.oauth_client.authorize_url(CsrfToken::new_random).url()
+    }
+
+    async fn create_user(&self, username: String, token: String) -> Result<User> {
+        let id = sqlx::query!(
+            "
+            INSERT INTO users
+            (username, token)
+            VALUES ($1, $2)
+            RETURNING id
+            ",
+            username,
+            token,
+        )
+        .fetch_one(&self.pool)
+        .await?
+        .id;
+
+        Ok(User::new(id, username, token))
     }
 }
 
@@ -80,8 +94,6 @@ impl AuthnBackend for Backend {
     type Error = crate::Error;
 
     async fn authenticate(&self, creds: Self::Credentials) -> Result<Option<Self::User>> {
-        let id = Uuid::now_v7();
-
         let token = match creds {
             Credentials::Developer { token } => token,
             Credentials::Oauth {
@@ -111,16 +123,17 @@ impl AuthnBackend for Backend {
             return Ok(None);
         };
 
-        let user = User::new(id, username, token);
-
-        self.cache.insert(id, user.clone()).await;
+        let user = self.create_user(username, token).await?;
         Ok(Some(user))
     }
 
     #[allow(clippy::blocks_in_conditions)]
     #[instrument(skip(self), fields(cache_hit), ret, err, level = Level::DEBUG)]
     async fn get_user(&self, id: &UserId<Self>) -> Result<Option<Self::User>> {
-        Ok(self.cache.get(id).await)
+        Ok(sqlx::query!("SELECT id, username, token FROM users")
+            .fetch_optional(&self.pool)
+            .await?
+            .map(|r| User::new(r.id, r.username, r.token)))
     }
 }
 

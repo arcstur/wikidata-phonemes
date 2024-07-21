@@ -19,6 +19,8 @@ pub enum Error {
     // external
     #[error(transparent)]
     Session(#[from] tower_sessions::session::Error),
+    #[error(transparent)]
+    Sqlx(#[from] sqlx::Error),
 
     #[error("There was an error communicating with the Mediawiki's OAuth API: {0}")]
     Oauth(#[from] BasicRequestTokenError<AsyncHttpClientError>),

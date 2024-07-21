@@ -15,8 +15,8 @@ use crate::AppRouter;
 pub type AuthSession = axum_login::AuthSession<Backend>;
 
 pub async fn layer(pool: SqlitePool) -> AuthManagerLayer<Backend, Sessions> {
-    let session_layer = Sessions::layer(pool).await;
-    let backend = Backend::new();
+    let session_layer = Sessions::layer(pool.clone()).await;
+    let backend = Backend::new(pool);
 
     AuthManagerLayerBuilder::new(backend, session_layer).build()
 }
