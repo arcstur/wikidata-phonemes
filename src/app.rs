@@ -1,5 +1,8 @@
 use axum::{extract::FromRef, routing::get, Router};
-use sqlx::{sqlite::SqlitePoolOptions, SqlitePool};
+use sqlx::{
+    sqlite::{SqliteConnectOptions, SqlitePoolOptions},
+    SqlitePool,
+};
 use tower_http::{services::ServeDir, trace::TraceLayer};
 type Request = axum::http::Request<axum::body::Body>;
 
@@ -23,8 +26,12 @@ impl AppState {
     }
 
     async fn pool() -> SqlitePool {
+        let options = SqliteConnectOptions::new()
+            .filename("phonemes.db")
+            .create_if_missing(true);
+
         SqlitePoolOptions::new()
-            .connect("sqlite:phonemes.db")
+            .connect_with(options)
             .await
             .expect("can't connect to the database")
     }
