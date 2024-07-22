@@ -30,10 +30,17 @@ impl AppState {
             .filename("phonemes.db")
             .create_if_missing(true);
 
-        SqlitePoolOptions::new()
+        let pool = SqlitePoolOptions::new()
             .connect_with(options)
             .await
-            .expect("can't connect to the database")
+            .expect("can't connect to the database");
+
+        sqlx::migrate!("./migrations")
+            .run(&pool)
+            .await
+            .expect("failed to run migrations");
+
+        pool
     }
 }
 
