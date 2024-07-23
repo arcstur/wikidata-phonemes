@@ -2,38 +2,25 @@
 
 {% block content %}
 
-<h2> Languages worked in <a href="https://pt.wikiversity.org/wiki/Obelep%C3%A9dia">Obelepédia</a> </h2>
+<h2> Languages worked in <a href="https://pt.wikiversity.org/wiki/Obelep%C3%A9dia">Obelepédia</a> or IOL working
+  languages </h2>
 
 <table>
   <thead>
     <th> Language </th>
-    <th> Portuguese wikipedia link </th>
-    <th> </th>
+    <th> Wikipedia link </th>
+    <th> Active user </th>
+    <th> Go </th>
   </thead>
-  {% for language in obelepedia_languages %}
+  {% for language in languages %}
   <tr>
     <td> <a href="https://www.wikidata.org/wiki/{{ language.qid }}">{{ language.en_label }}</a> </td>
     <td> <a href="{{ language.wikipedia_url }}"> Link </a> </td>
-    <td> <a href="/languages/{{ language.qid }}"> See </a> </td>
+    <td> {{ language.working_user_username }} </td>
+    <td> <a href="/languages/{{ language.qid }}"> Edit
+        {% if language.is_finished %} ✅ {% endif %}
+      </a> </td>
   </tr>
   {% endfor %}
 </table>
-
-<h2> IOL Working Languages </h2>
-
-<table>
-  <thead>
-    <th> Language </th>
-    <th> English wikipedia link </th>
-    <th> </th>
-  </thead>
-  {% for language in working_languages %}
-  <tr>
-    <td> <a href="https://www.wikidata.org/wiki/{{ language.qid }}">{{ language.en_label }}</a> </td>
-    <td> <a href="{{ language.wikipedia_url }}"> Link </a> </td>
-    <td> <a href="/languages/{{ language.qid }}"> See </a> </td>
-  </tr>
-  {% endfor %}
-</table>
-
 {% endblock content %}

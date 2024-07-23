@@ -1,0 +1,44 @@
+{
+  "db_name": "SQLite",
+  "query": "\n        SELECT\n            l.qid,\n            l.en_label,\n            l.wikipedia_url,\n            s.is_finished,\n            COALESCE(wu.username, '') AS working_user_username\n        FROM languages l\n        LEFT JOIN language_status s ON (s.qid = l.qid)\n        LEFT JOIN users wu ON (s.working_user = wu.id)\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "qid",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "en_label",
+        "ordinal": 1,
+        "type_info": "Text"
+      },
+      {
+        "name": "wikipedia_url",
+        "ordinal": 2,
+        "type_info": "Text"
+      },
+      {
+        "name": "is_finished",
+        "ordinal": 3,
+        "type_info": "Bool"
+      },
+      {
+        "name": "working_user_username",
+        "ordinal": 4,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "1c7f0f90ec66fe12cfe82371f7631b2fa1e475b857a7f61d403d453a57c0ef62"
+}
