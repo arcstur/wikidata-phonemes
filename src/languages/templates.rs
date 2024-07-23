@@ -28,6 +28,7 @@ pub(super) struct Details {
     pub(super) phonemes: Vec<Phoneme>,
     pub(super) label_or_id: String,
     pub(super) id: EntityId,
+    pub(super) status: Status,
 }
 
 #[derive(Template)]

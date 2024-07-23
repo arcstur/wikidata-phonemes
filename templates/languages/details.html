@@ -41,8 +41,6 @@
   {% endif %}
 </div>
 
-<span hx-get="/languages/{{ id.as_str() }}/status" hx-trigger="load" hx-swap="outerHTML">
-  <img class="htmx-indicator" src="/static/spinner.svg">
-</span>
+{{ status|safe }}
 
 {% endblock content %}

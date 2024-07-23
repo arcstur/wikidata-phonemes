@@ -9,6 +9,7 @@ use sqlx::SqlitePool;
 
 use crate::{
     api::{AddPhonemeInput, Editor},
+    app::AppState,
     phonemes::Phoneme,
     AppRouter, Client, EntityId, Result, User, WikiValue,
 };
@@ -35,8 +36,15 @@ async fn list_languages(State(client): State<Client>) -> Result<List> {
     Ok(List { languages })
 }
 
-async fn single_language(State(client): State<Client>, Path(id): Path<String>) -> Result<Details> {
-    let id = EntityId(id);
+async fn single_language(
+    user: Option<User>,
+    State(state): State<AppState>,
+    Path(qid): Path<String>,
+) -> Result<Details> {
+    let client = state.client;
+    let pool = state.pool;
+
+    let id = EntityId(qid.clone());
     let phonemes = Phoneme::by_language(&client, &id).await?;
     let label_or_id = client
         .english_label(&id)
@@ -47,6 +55,7 @@ async fn single_language(State(client): State<Client>, Path(id): Path<String>) -
         phonemes,
         label_or_id,
         id,
+        status: Status::generate(&pool, user, qid).await?,
     })
 }
 

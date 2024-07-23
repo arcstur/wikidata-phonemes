@@ -13,7 +13,7 @@ pub type AppRouter = Router<AppState>;
 
 #[derive(Clone, FromRef)]
 pub struct AppState {
-    client: Client,
+    pub client: Client,
     pub pool: SqlitePool,
 }
 
