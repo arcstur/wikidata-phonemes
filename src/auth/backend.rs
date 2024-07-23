@@ -56,6 +56,7 @@ impl Backend {
             INSERT INTO users
             (username, token)
             VALUES ($1, $2)
+            ON CONFLICT(username) DO UPDATE SET token = $2
             RETURNING id
             ",
             username,
