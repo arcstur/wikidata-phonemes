@@ -16,12 +16,14 @@
         <td colspan="3">
           <form hx-post="/languages/{{ id.as_str() }}/add_phoneme" hx-target="closest td" hx-swap="innerHTML swap:500ms"
             hx-confirm="Are you sure you want to add the phoneme '{{ phoneme.label }}' to the language '{{ label_or_id }}'?"
-            hx-indicator="next .htmx-indicator">
+            hx-indicator="next .htmx-indicator" class="grid">
             <input type="hidden" name="phoneme" value="{{ phoneme.q.as_str() }}">
-            <input type="text" name="wikipedia_url" aria-label="Wikipedia permalink" placeholder="Wikipedia permalink"
-              required pattern=".*wikipedia.*oldid.*">
-            <small>A Wikipedia permalink is of the form "https://pt.wikipedia.org/....<strong>oldid</strong>=&lt;some
-              number&gt;"</small>
+            <div>
+              <input type="text" name="wikipedia_url" aria-label="Wikipedia permalink" placeholder="Wikipedia permalink"
+                required pattern=".*wikipedia.*oldid.*">
+              <small>A Wikipedia permalink is of the form "https://pt.wikipedia.org/....<strong>oldid</strong>=&lt;some
+                number&gt;"</small>
+            </div>
             <input type="submit" value="Add">
           </form>
           <img class="htmx-indicator">
