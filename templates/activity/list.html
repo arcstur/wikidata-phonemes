@@ -17,8 +17,8 @@
     <td> <a href="https://www.wikidata.org/wiki/{{ language.qid }}">{{ language.en_label }}</a> </td>
     <td> <a href="{{ language.wikipedia_url }}"> Link </a> </td>
     <td> {{ language.working_user_username }} </td>
-    <td> <a href="/languages/{{ language.qid }}"> Edit
-        {% if language.is_finished %} ✅ {% endif %}
+    <td> <a href="/languages/{{ language.qid }}">
+        {% if language.is_finished %} See ✅ {% else %} Edit {% endif %}
       </a> </td>
   </tr>
   {% endfor %}

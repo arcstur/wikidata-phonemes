@@ -6,9 +6,9 @@
     opacity: 0;
     transition: opacity 500ms ease-out;
   }
-  tr > td > form {
+
+  tr>td>form {
     max-width: 800px;
-    margin-left: auto;
     margin-right: auto;
   }
 </style>
@@ -20,10 +20,9 @@
   <p><a href="https://www.wikidata.org/wiki/{{ id.as_str() }}">Wikidata</a></p>
 </hgroup>
 
-
 <hgroup>
-<h2> Current phonemes ({{ phonemes.len() }}) </h2>
-<p> If you just added the phonemes, it will take some time for the Wikidata cache to refresh and show them here :)</p>
+  <h2> Current phonemes ({{ phonemes.len() }}) </h2>
+  <p> If you just added the phonemes, it will take some time for the Wikidata cache to refresh and show them here :)</p>
 </hgroup>
 
 <div class="overflow-auto">
@@ -47,49 +46,8 @@
   {% endif %}
 </div>
 
-
-{% if !is_logged_in %}
-<form action="/auth/login">
-  <input type="submit" value="Log in to add phonemes">
-</form>
-{% else %}
-
-<h2> Available phonemes </h2>
-<div class="overflow-auto">
-  <table class="striped">
-    <thead>
-      <th> Name </th>
-      <th> Symbol </th>
-      <th> Audio </th>
-    </thead>
-    {% for phoneme in available_phonemes %}
-    <tbody>
-      <tr>
-        <td> <a href="{{ phoneme.q }}"><strong>{{ phoneme.label }}</strong></a> </td>
-        <td> {{ phoneme.transcriptions }} </td>
-        <td> {% include "phonemes/audio.html" %} </td>
-      </tr>
-      {% if is_logged_in %}
-      <tr>
-        <td colspan="3">
-          <form hx-post="/languages/{{ id.as_str() }}/add_phoneme" hx-target="closest td"
-            hx-swap="innerHTML swap:500ms"
-            hx-confirm="Are you sure you want to add the phoneme '{{ phoneme.label }}' to the language '{{ label_or_id }}'?"
-            hx-indicator="next .htmx-indicator">
-            <input type="hidden" name="phoneme" value="{{ phoneme.q.as_str() }}">
-            <input type="text" name="wikipedia_url" aria-label="Wikipedia permalink" placeholder="Wikipedia permalink" required pattern=".*wikipedia.*oldid.*">
-            <small>A Wikipedia permalink is of the form "https://pt.wikipedia.org/....<strong>oldid</strong>=&lt;some number&gt;"</small>
-            <input type="submit" value="Add">
-          </form>
-          <img class="htmx-indicator" src="/static/spinner.svg"
-            style="display: block; margin-left: auto; margin-right: auto;">
-        </td>
-      </tr>
-    </tbody>
-    {% endif %}
-    {% endfor %}
-  </table>
-</div>
-{% endif %}
+<span hx-get="/languages/{{ id.as_str() }}/status" hx-trigger="load" hx-swap="outerHTML">
+  <img class="htmx-indicator" src="/static/spinner.svg">
+</span>
 
 {% endblock content %}

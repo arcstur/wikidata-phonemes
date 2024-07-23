@@ -1,0 +1,51 @@
+<div id="languageStatus" hx-target="#languageStatus" hx-swap="outerHTML">
+  {% if is_finished %}
+  <p>
+    This language was marked as finished by {{ working_user_username }}!
+  </p>
+  <form hx-post="/languages/{{ id.as_str() }}/undo_finish">
+    <input type="submit" value="Unmark as finished." class="secondary">
+  </form>
+  {% else %}
+
+  {% if user.is_none() %}
+  <form action="/auth/login">
+    <input type="submit" value="Log in to add phonemes">
+  </form>
+  {% else %}
+
+  <h2> Editing section </h2>
+
+  {% if working_user_username.is_empty() %}
+  <form hx-post="/languages/{{ id.as_str() }}/mark_as_working">
+    <input type="submit" value="Mark as my active language">
+  </form>
+  {% else %}
+
+  <p>
+    <b>This language is being worked on by {{ working_user_username }}!</b>
+  </p>
+
+  {% if let Some(user) = user %}
+  {% if working_user_username == user.username() %}
+  <div class="grid" hx-indicator="status-indicator">
+    <form hx-post="/languages/{{ id.as_str() }}/unmark_as_working">
+      <input type="submit" value="Unmark as my active language" class="secondary">
+    </form>
+
+    <form hx-post="/languages/{{ id.as_str() }}/finish">
+      <input type="submit" value="Mark as finished ✅">
+    </form>
+
+    <img class="htmx-indicator" id="status-indicator" src="/static/spinner.svg">
+  </div>
+
+  <span id="availablePhonemes" hx-get="/languages/{{ id.as_str() }}/available_phonemes" hx-trigger="load"
+    hx-swap="outerHTML" hx-target="#availablePhonemes">
+  </span>
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  {% endif %}
+  {% endif %}
+</div>
