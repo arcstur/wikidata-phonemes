@@ -1,19 +1,25 @@
 mod obelepedia;
 mod templates;
+mod working_languages;
 
 use axum::routing::get;
+use working_languages::WORKING_LANGUAGES;
 
 use crate::AppRouter;
 use obelepedia::OBELEPEDIA;
 use templates::List;
 
 pub fn router() -> AppRouter {
-    AppRouter::new().route("/", get(obelepedia_list))
+    AppRouter::new().route("/", get(languages_list))
 }
 
-async fn obelepedia_list() -> List {
-    let languages = OBELEPEDIA.into();
-    List { languages }
+async fn languages_list() -> List {
+    let obelepedia_languages = OBELEPEDIA.into();
+    let working_languages = WORKING_LANGUAGES.into();
+    List {
+        obelepedia_languages,
+        working_languages,
+    }
 }
 
 struct Language {

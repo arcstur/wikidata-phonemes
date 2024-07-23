@@ -10,10 +10,27 @@
     <th> Portuguese wikipedia link </th>
     <th> </th>
   </thead>
-  {% for language in languages %}
+  {% for language in obelepedia_languages %}
   <tr>
     <td> <a href="https://www.wikidata.org/wiki/{{ language.qid }}">{{ language.en_label }}</a> </td>
-    <td> <a href="{{ language.pt_wikipedia }}"> Link </a> </td>
+    <td> <a href="{{ language.wikipedia_url }}"> Link </a> </td>
+    <td> <a href="/languages/{{ language.qid }}"> See </a> </td>
+  </tr>
+  {% endfor %}
+</table>
+
+<h2> IOL Working Languages </h2>
+
+<table>
+  <thead>
+    <th> Language </th>
+    <th> English wikipedia link </th>
+    <th> </th>
+  </thead>
+  {% for language in working_languages %}
+  <tr>
+    <td> <a href="https://www.wikidata.org/wiki/{{ language.qid }}">{{ language.en_label }}</a> </td>
+    <td> <a href="{{ language.wikipedia_url }}"> Link </a> </td>
     <td> <a href="/languages/{{ language.qid }}"> See </a> </td>
   </tr>
   {% endfor %}
