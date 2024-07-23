@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT SUM(is_finished) AS finished FROM language_status",
+  "describe": {
+    "columns": [
+      {
+        "name": "finished",
+        "ordinal": 0,
+        "type_info": "Int"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "c76df35a1183fc0e6d17b3e175be78e89842f89d03188438fb9b63b2a50f0cba"
+}
