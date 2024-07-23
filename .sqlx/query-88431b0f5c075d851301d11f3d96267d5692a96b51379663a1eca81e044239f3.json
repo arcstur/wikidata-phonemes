@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "\n            SELECT\n                s.is_finished,\n                u.username\n            FROM language_status s\n            LEFT JOIN users u ON (u.id = s.working_user)\n            WHERE s.qid = ?\n            ",
+  "describe": {
+    "columns": [
+      {
+        "name": "is_finished",
+        "ordinal": 0,
+        "type_info": "Bool"
+      },
+      {
+        "name": "username",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      true
+    ]
+  },
+  "hash": "88431b0f5c075d851301d11f3d96267d5692a96b51379663a1eca81e044239f3"
+}

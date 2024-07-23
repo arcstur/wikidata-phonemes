@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "REPLACE INTO language_status ('qid', 'working_user') VALUES (?, ?)",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 2
+    },
+    "nullable": []
+  },
+  "hash": "da97c0fdf4c79d98715943a4aab75c81f8516e55c4eee14f42be47dc38e7846f"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "UPDATE language_status SET is_finished = true WHERE qid = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "658ef9d32d1bd3b79fc034ac73eb73c3c796fcf9198ab17c38e8b40a67d56376"
+}

@@ -1,0 +1,12 @@
+{
+  "db_name": "SQLite",
+  "query": "DELETE FROM language_status WHERE qid = ?",
+  "describe": {
+    "columns": [],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": []
+  },
+  "hash": "e5f8c189b611e4d4995bdd60fb368dddf1c49aac1972c942640e45d5d4586b9a"
+}
