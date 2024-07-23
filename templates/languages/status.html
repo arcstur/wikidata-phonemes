@@ -4,7 +4,7 @@
     This language was marked as finished by {{ working_user_username }}!
   </p>
   <form hx-post="/languages/{{ id.as_str() }}/undo_finish">
-    <input type="submit" value="Unmark as finished." class="secondary">
+    <input type="submit" value="Unmark as finished ❌" class="secondary">
   </form>
   {% else %}
 
@@ -18,7 +18,7 @@
 
   {% if working_user_username.is_empty() %}
   <form hx-post="/languages/{{ id.as_str() }}/mark_as_working">
-    <input type="submit" value="Mark as my active language">
+    <input type="submit" value="Mark as my active language 🏁">
   </form>
   {% else %}
 
@@ -28,18 +28,17 @@
 
   {% if let Some(user) = user %}
   {% if working_user_username == user.username() %}
-  <div class="grid" hx-indicator="status-indicator">
+  <div class="grid">
     <form hx-post="/languages/{{ id.as_str() }}/unmark_as_working">
-      <input type="submit" value="Unmark as my active language" class="secondary">
+      <input type="submit" value="Unmark as my active language 🛑" class="secondary">
     </form>
 
     <form hx-post="/languages/{{ id.as_str() }}/finish">
       <input type="submit" value="Mark as finished ✅">
     </form>
-
-    <img class="htmx-indicator" id="status-indicator" src="/static/spinner.svg">
   </div>
 
+  <h3> Choose phonemes to add to the language </h3>
   <span id="availablePhonemes" hx-get="/languages/{{ id.as_str() }}/available_phonemes" hx-trigger="load"
     hx-swap="outerHTML" hx-target="#availablePhonemes">
   </span>
