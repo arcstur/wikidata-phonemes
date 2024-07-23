@@ -2,6 +2,7 @@ mod templates;
 
 use axum::{
     extract::{Form, Path, State},
+    response::Redirect,
     routing::{get, post},
 };
 use axum_login::AuthUser;
@@ -14,13 +15,13 @@ use crate::{
     AppRouter, Client, EntityId, Result, User, WikiValue,
 };
 use serde::Deserialize;
-use templates::{AvailablePhonemes, List, PhonemeAdded, Status};
+use templates::{AvailablePhonemes, PhonemeAdded, Status};
 
 use self::templates::Details;
 
 pub fn router() -> AppRouter {
     AppRouter::new()
-        .route("/", get(list_languages))
+        .route("/", get(go_to_status))
         .route("/:id", get(single_language))
         .route("/:id/mark_as_working", post(mark_as_working))
         .route("/:id/unmark_as_working", post(unmark_as_working))
@@ -31,9 +32,8 @@ pub fn router() -> AppRouter {
         .route("/:id/add_phoneme", post(add_phoneme))
 }
 
-async fn list_languages(State(client): State<Client>) -> Result<List> {
-    let languages = Language::list(&client).await?;
-    Ok(List { languages })
+async fn go_to_status() -> Redirect {
+    Redirect::to("/status")
 }
 
 async fn single_language(
@@ -213,18 +213,18 @@ async fn undo_finish(
 }
 
 #[derive(Debug, Deserialize)]
-struct Language {
+pub(super) struct Language {
     #[serde(rename = "language")]
-    q: EntityId,
+    pub(super) q: EntityId,
     #[serde(rename = "languageLabel")]
-    label: WikiValue<String>,
-    phoneme_count: WikiValue<String>,
+    pub(super) label: WikiValue<String>,
+    pub(super) phoneme_count: WikiValue<String>,
 }
 
 impl Language {
     const LIST: &'static str = include_str!("languages_phoneme_count.sparql");
 
-    async fn list(client: &Client) -> Result<Vec<Self>> {
+    pub(super) async fn list(client: &Client) -> Result<Vec<Self>> {
         let query = Self::LIST;
         Ok(client.query::<Self>(query).await?)
     }

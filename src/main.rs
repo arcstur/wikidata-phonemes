@@ -5,6 +5,7 @@ mod auth;
 mod error;
 mod languages;
 mod phonemes;
+mod status;
 
 use tracing::info;
 

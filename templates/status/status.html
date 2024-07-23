@@ -1,0 +1,33 @@
+{% extends "layout.html" %}
+{% block content %}
+
+<h2> Finished languages ✅ </h2>
+<ul>
+  <li> Count: {{ finished_languages }} </li>
+</ul>
+
+
+<h2> Languages with phonemes in Wikidata </h2>
+<ul>
+  <li> Count: {{ Self::wikidata_count(self) }} </li>
+  <li> Total phoneme count: {{ Self::wikidata_phoneme_count(self) }} </li>
+</ul>
+
+<table>
+  <thead>
+    <th> Language </th>
+    <th> Phoneme count </th>
+    <th> </th>
+  </thead>
+  {% for language in wikidata_languages %}
+  <tr>
+    <td> <a href="{{ language.q }}">{{ language.label }}</a> </td>
+    <td> {{ language.phoneme_count }} </td>
+    <td>
+        <a href="/languages/{{ language.q.0 }}"> See </a>
+    </td>
+  </tr>
+  {% endfor %}
+</table>
+
+{% endblock content %}
