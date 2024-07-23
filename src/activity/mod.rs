@@ -19,5 +19,5 @@ async fn obelepedia_list() -> List {
 struct Language {
     qid: &'static str,
     en_label: &'static str,
-    pt_wikipedia: &'static str,
+    wikipedia_url: &'static str,
 }
