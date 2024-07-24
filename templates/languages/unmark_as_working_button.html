@@ -1,0 +1,6 @@
+{% extends "layout.html" %}
+{% block content %}
+<form hx-post="/languages/{{ id.as_str() }}/unmark_as_working">
+  <input type="submit" value="Unmark as active language 🛑" class="secondary">
+</form>
+{% endblock content %}

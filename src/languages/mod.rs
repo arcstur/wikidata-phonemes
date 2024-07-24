@@ -15,7 +15,7 @@ use crate::{
     AppRouter, Client, EntityId, Result, User, WikiValue,
 };
 use serde::Deserialize;
-use templates::{AvailablePhonemes, PhonemeAdded, Status};
+use templates::{AvailablePhonemes, PhonemeAdded, Status, UnmarkAsWorkingButton};
 
 use self::templates::Details;
 
@@ -25,6 +25,7 @@ pub fn router() -> AppRouter {
         .route("/:id", get(single_language))
         .route("/:id/mark_as_working", post(mark_as_working))
         .route("/:id/unmark_as_working", post(unmark_as_working))
+        .route("/:id/dev", get(unmark_as_working_button))
         .route("/:id/finish", post(finish))
         .route("/:id/undo_finish", post(undo_finish))
         .route("/:id/available_phonemes", get(available_phonemes))
@@ -182,6 +183,11 @@ async fn unmark_as_working(
         .execute(&pool)
         .await?;
     Status::generate(&pool, Some(user), qid).await
+}
+
+async fn unmark_as_working_button(_user: User, Path(qid): Path<String>) -> UnmarkAsWorkingButton {
+    let id = EntityId(qid);
+    UnmarkAsWorkingButton { id }
 }
 
 async fn finish(

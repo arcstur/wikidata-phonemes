@@ -34,3 +34,9 @@ pub(super) struct AvailablePhonemes {
     ext = "html"
 )]
 pub(super) struct PhonemeAdded {}
+
+#[derive(Template)]
+#[template(path = "languages/unmark_as_working_button.html")]
+pub(super) struct UnmarkAsWorkingButton {
+    pub(super) id: EntityId,
+}
