@@ -10,13 +10,11 @@
     <th> Language </th>
     <th> Wikipedia link </th>
     <th> Active user </th>
-    <th> Go </th>
+    <th> </th>
   </thead>
   {% for language in languages %}
   <tr>
-    <td> <a href="https://www.wikidata.org/wiki/{{ language.qid }}"> {{ language.en_label }} </a>
-      {% if language.is_finished %} ✅ {% endif %}
-    </td>
+    <td> {{ language.en_label }} {% if language.is_finished %} ✅ {% endif %} </td>
     <td> <a href="{{ language.wikipedia_url }}"> Link </a> </td>
     <td> {{ language.working_user_username }} </td>
     <td> <a href="/languages/{{ language.qid }}">

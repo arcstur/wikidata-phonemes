@@ -9,7 +9,7 @@
   {% else %}
 
   {% if user.is_none() %}
-  <form action="/auth/login">
+  <form action="/auth/login" hx-boost="false">
     <input type="submit" value="Log in to add phonemes">
   </form>
   {% else %}
