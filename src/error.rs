@@ -10,6 +10,10 @@ pub enum Error {
     #[error("Failed to communicate with the Wikidata API: {0}")]
     Client(#[from] reqwest::Error),
 
+    // custom
+    #[error("User tried to access a language not in the activity's list")]
+    LanguageNotInList,
+
     // auth
     #[error("OAuth callback was reached but the user does not have the original CSRF state in its session.")]
     MissingOriginalState,
@@ -32,11 +36,13 @@ impl IntoResponse for Error {
 
         let status_code = match self {
             MissingOriginalState | AuthorizationFailed => StatusCode::UNAUTHORIZED,
+            LanguageNotInList => StatusCode::OK, // so that HTMX will show it in the page
             _ => StatusCode::INTERNAL_SERVER_ERROR,
         };
 
         let message = match self {
             AuthorizationFailed => "Authorization failed.",
+            LanguageNotInList => "The item you tried to access is not a language of this activity",
             _ => "An error happened. Please, try again.",
         };
 

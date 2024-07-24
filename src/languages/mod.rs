@@ -12,7 +12,7 @@ use crate::{
     api::{AddPhonemeInput, Editor},
     app::AppState,
     phonemes::Phoneme,
-    AppRouter, Client, EntityId, Result, User, WikiValue,
+    AppRouter, Client, EntityId, Error, Result, User, WikiValue,
 };
 use serde::Deserialize;
 use templates::{AvailablePhonemes, PhonemeAdded, Status, UnmarkAsWorkingButton};
@@ -46,16 +46,26 @@ async fn single_language(
     let pool = state.pool;
 
     let id = EntityId(qid.clone());
+
+    let row = sqlx::query!(
+        "
+        SELECT en_label, wikipedia_url
+        FROM languages
+        WHERE qid = ?
+        ",
+        qid,
+    )
+    .fetch_optional(&pool)
+    .await?
+    .ok_or(Error::LanguageNotInList)?;
+
     let phonemes = Phoneme::by_language(&client, &id).await?;
-    let label_or_id = client
-        .english_label(&id)
-        .await?
-        .unwrap_or(format!("Language {id}"));
 
     Ok(Details {
         phonemes,
-        label_or_id,
         id,
+        en_label: row.en_label,
+        wikipedia_url: row.wikipedia_url,
         status: Status::generate(&pool, user, qid).await?,
     })
 }
@@ -93,21 +103,25 @@ async fn add_phoneme(
 }
 
 async fn available_phonemes(
-    State(client): State<Client>,
+    State(state): State<AppState>,
     _user: User,
-    Path(id): Path<String>,
+    Path(qid): Path<String>,
 ) -> Result<AvailablePhonemes> {
-    let id = EntityId(id);
-    let label_or_id = client
-        .english_label(&id)
+    let pool = state.pool;
+    let client = state.client;
+
+    let en_label = sqlx::query!("SELECT en_label FROM languages WHERE qid = ?", qid)
+        .fetch_one(&pool)
         .await?
-        .unwrap_or(format!("Language {id}"));
+        .en_label;
+
+    let id = EntityId(qid);
     let available_phonemes = Phoneme::by_language_opposite(&client, &id).await?;
 
     Ok(AvailablePhonemes {
         id,
         available_phonemes,
-        label_or_id,
+        en_label,
     })
 }
 

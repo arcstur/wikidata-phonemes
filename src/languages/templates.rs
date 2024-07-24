@@ -6,7 +6,8 @@ use crate::{EntityId, Phoneme, User};
 #[template(path = "languages/details.html")]
 pub(super) struct Details {
     pub(super) phonemes: Vec<Phoneme>,
-    pub(super) label_or_id: String,
+    pub(super) en_label: String,
+    pub(super) wikipedia_url: String,
     pub(super) id: EntityId,
     pub(super) status: Status,
 }
@@ -25,7 +26,7 @@ pub(super) struct Status {
 pub(super) struct AvailablePhonemes {
     pub(super) available_phonemes: Vec<Phoneme>,
     pub(super) id: EntityId,
-    pub(super) label_or_id: String,
+    pub(super) en_label: String,
 }
 
 #[derive(Template)]

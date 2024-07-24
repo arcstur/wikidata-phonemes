@@ -22,7 +22,7 @@
       <tr>
         <td colspan="3">
           <form hx-post="/languages/{{ id.as_str() }}/add_phoneme" hx-target="closest td" hx-swap="innerHTML swap:500ms"
-            hx-confirm="Are you sure you want to add the phoneme '{{ phoneme.label }}' to the language '{{ label_or_id }}'?"
+            hx-confirm="Are you sure you want to add the phoneme '{{ phoneme.label }}' to the language '{{ en_label }}'?"
             hx-indicator="next .htmx-indicator" class="grid">
             <input type="hidden" name="phoneme" value="{{ phoneme.q.as_str() }}">
             <div>
