@@ -1,6 +1,6 @@
 {
   "db_name": "SQLite",
-  "query": "SELECT id, username, token FROM users",
+  "query": "\n            SELECT id, username, token\n            FROM users\n            WHERE id = ?\n            ",
   "describe": {
     "columns": [
       {
@@ -20,7 +20,7 @@
       }
     ],
     "parameters": {
-      "Right": 0
+      "Right": 1
     },
     "nullable": [
       false,
@@ -28,5 +28,5 @@
       false
     ]
   },
-  "hash": "a65d579d1bae22be904de77f44dc90fe79b9406c44e3299b134ca9d11be3f5b3"
+  "hash": "0e82d71fe24c7cdd7b7016a60de531ccd42c265bdfd87d3ba0cd73a5aba8c6dc"
 }
