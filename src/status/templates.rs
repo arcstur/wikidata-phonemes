@@ -5,7 +5,7 @@ use crate::languages::Language;
 #[derive(Template)]
 #[template(path = "status/status.html")]
 pub(super) struct MainStatus {
-    pub(super) finished_languages: i32,
+    pub(super) finished_languages: i64,
     pub(super) wikidata_languages: Vec<Language>,
 }
 
