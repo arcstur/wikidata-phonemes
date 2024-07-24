@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT en_label FROM languages WHERE qid = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "en_label",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "cf256b1497bfe23354c8b81b8830dba07769af5f6473041d74f58c4e6638cbdd"
+}

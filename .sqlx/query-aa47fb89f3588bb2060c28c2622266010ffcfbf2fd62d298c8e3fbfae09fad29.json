@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT qid FROM languages",
+  "describe": {
+    "columns": [
+      {
+        "name": "qid",
+        "ordinal": 0,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 0
+    },
+    "nullable": [
+      false
+    ]
+  },
+  "hash": "aa47fb89f3588bb2060c28c2622266010ffcfbf2fd62d298c8e3fbfae09fad29"
+}

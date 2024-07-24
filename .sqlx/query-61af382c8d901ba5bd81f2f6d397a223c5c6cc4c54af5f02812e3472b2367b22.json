@@ -1,0 +1,20 @@
+{
+  "db_name": "SQLite",
+  "query": "SELECT working_user FROM language_status WHERE qid = ?",
+  "describe": {
+    "columns": [
+      {
+        "name": "working_user",
+        "ordinal": 0,
+        "type_info": "Integer"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      true
+    ]
+  },
+  "hash": "61af382c8d901ba5bd81f2f6d397a223c5c6cc4c54af5f02812e3472b2367b22"
+}

@@ -1,0 +1,26 @@
+{
+  "db_name": "SQLite",
+  "query": "\n        SELECT en_label, wikipedia_url\n        FROM languages\n        WHERE qid = ?\n        ",
+  "describe": {
+    "columns": [
+      {
+        "name": "en_label",
+        "ordinal": 0,
+        "type_info": "Text"
+      },
+      {
+        "name": "wikipedia_url",
+        "ordinal": 1,
+        "type_info": "Text"
+      }
+    ],
+    "parameters": {
+      "Right": 1
+    },
+    "nullable": [
+      false,
+      false
+    ]
+  },
+  "hash": "068f4e7e0d85e83a6da468dd38b8280cfd42ae62ca00f7a28eee246a7e035ae8"
+}
