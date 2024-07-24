@@ -17,7 +17,18 @@ async fn main_status(State(AppState { client, pool }): State<AppState>) -> Resul
             .finished
             .unwrap_or(0);
 
-    let wikidata_languages = Language::list(&client).await?;
+    let all_qids: Vec<String> = sqlx::query!("SELECT qid FROM languages")
+        .fetch_all(&pool)
+        .await?
+        .into_iter()
+        .map(|r| r.qid)
+        .collect();
+
+    let wikidata_languages = Language::list(&client)
+        .await?
+        .into_iter()
+        .filter(|l| all_qids.contains(&l.q.0))
+        .collect();
 
     Ok(MainStatus {
         finished_languages,
