@@ -177,13 +177,23 @@ async fn mark_as_working(
 ) -> Result<Status> {
     let user_id = user.id();
 
-    sqlx::query!(
-        "REPLACE INTO language_status ('qid', 'working_user') VALUES (?, ?)",
-        qid,
-        user_id,
+    let working_user_exists = sqlx::query!(
+        "SELECT working_user FROM language_status WHERE qid = ?",
+        qid
     )
-    .execute(&pool)
-    .await?;
+    .fetch_optional(&pool)
+    .await?
+    .is_some_and(|row| row.working_user.is_some());
+
+    if !working_user_exists {
+        sqlx::query!(
+            "REPLACE INTO language_status ('qid', 'working_user') VALUES (?, ?)",
+            qid,
+            user_id,
+        )
+        .execute(&pool)
+        .await?;
+    }
 
     Status::generate(&pool, Some(user), qid).await
 }
