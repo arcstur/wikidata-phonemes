@@ -131,10 +131,17 @@ impl AuthnBackend for Backend {
     #[allow(clippy::blocks_in_conditions)]
     #[instrument(skip(self), fields(cache_hit), ret, err, level = Level::DEBUG)]
     async fn get_user(&self, id: &UserId<Self>) -> Result<Option<Self::User>> {
-        Ok(sqlx::query!("SELECT id, username, token FROM users")
-            .fetch_optional(&self.pool)
-            .await?
-            .map(|r| User::new(r.id, r.username, r.token)))
+        Ok(sqlx::query!(
+            "
+            SELECT id, username, token
+            FROM users
+            WHERE id = ?
+            ",
+            id
+        )
+        .fetch_optional(&self.pool)
+        .await?
+        .map(|r| User::new(r.id, r.username, r.token)))
     }
 }
 
